@@ -69,9 +69,16 @@ async function doSearch(userTriggered){
   results = results.filter(r=>passesRefinements(r));
   // if a geolocation search was performed, userLat/Lon may be set
   if(window.__userLocation){
-    results = results.map(r=>({r:r,d:distanceMiles(window.__userLocation.lat, window.__userLocation.lon, r.lat, r.lon)}))
-      .filter(x=>x.d!==null && x.d<=50) // 50 mile radius default
-      .sort((a,b)=>a.d-b.d)
+    results = results.map(r=>{
+      const d = distanceMiles(window.__userLocation.lat, window.__userLocation.lon, r.lat, r.lon);
+      return {r:r, d:d};
+    })
+      .filter(x=>x.d===null || x.d<=50) // include all if no coords, or those within 50 miles
+      .sort((a,b)=>{
+        if(a.d===null) return 1; // resources without coords go to end
+        if(b.d===null) return -1;
+        return a.d-b.d;
+      })
       .map(x=>x.r);
   }
   renderResults(results);
@@ -91,12 +98,18 @@ function toggleLowBandwidth(){
 }
 
 async function geolocateAndSearch(){
-  if(!navigator.geolocation){ alert('Geolocation not supported'); return; }
+  if(!navigator.geolocation){ alert('Geolocation not supported on this device'); return; }
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '<p class="hint">Finding your location...</p>';
   navigator.geolocation.getCurrentPosition(async (pos)=>{
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     window.__userLocation = {lat, lon};
+    resultsDiv.innerHTML = '<p class="hint">Searching within 50 miles of your location...</p>';
     await doSearch(true);
-  }, (err)=>{ alert('Location denied or unavailable'); }, {timeout:8000});
+  }, (err)=>{
+    resultsDiv.innerHTML = '<p class="hint">Location access denied. Please enter a city or ZIP code instead.</p>';
+    console.error('Geolocation error:', err);
+  }, {timeout:8000});
 }
 
 function distanceMiles(lat1, lon1, lat2, lon2){
