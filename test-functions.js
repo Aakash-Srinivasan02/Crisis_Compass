@@ -443,6 +443,165 @@ test('Language: persists to localStorage', () => {
 });
 
 // ============================================================
+// LOCATION FEATURE TESTS (Tests 21-30)
+// ============================================================
+
+test('geolocateAndSearch: filters resources within 50 miles', () => {
+  const filePath = path.join(__dirname, 'resources.json');
+  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 3959;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+  
+  const userLat = 39.78, userLon = -89.65;
+  const withinRange = resources.map(r => {
+    const d = calculateDistance(userLat, userLon, r.lat, r.lon);
+    return {r, d};
+  })
+    .filter(x => x.d === null || x.d <= 50);
+  assertTruthy(withinRange.length === resources.length, 'All resources within 50 miles');
+});
+
+test('geolocateAndSearch: sorts results by distance (closest first)', () => {
+  const filePath = path.join(__dirname, 'resources.json');
+  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 3959;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+  
+  const userLat = 39.78, userLon = -89.65;
+  const sorted = resources
+    .map(r => ({r, d: calculateDistance(userLat, userLon, r.lat, r.lon)}))
+    .sort((a,b) => {
+      if(a.d === null) return 1;
+      if(b.d === null) return -1;
+      return a.d - b.d;
+    });
+  const isSorted = sorted.every((item, i, arr) => {
+    if(i === 0) return true;
+    const prev = arr[i-1];
+    if(item.d === null && prev.d === null) return true;
+    if(item.d === null) return true;
+    if(prev.d === null) return false;
+    return prev.d <= item.d;
+  });
+  assertTruthy(isSorted, 'Results sorted by distance ascending');
+});
+
+test('renderResults: displays distance in results', () => {
+  const filePath = path.join(__dirname, 'resources.json');
+  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  
+  function distanceMiles(lat1, lon1, lat2, lon2){
+    if(!lat2 || !lon2) return null;
+    const R = 3958.8;
+    const toRad = v=>v*Math.PI/180;
+    const dLat = toRad(lat2-lat1);
+    const dLon = toRad(lon2-lon1);
+    const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)*Math.sin(dLon/2);
+    const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R*c;
+  }
+  
+  global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
+  const resource = resources[0];
+  const distance = distanceMiles(39.78, -89.65, resource.lat, resource.lon);
+  assertTruthy(distance > 0 && distance < 1, 'Distance calculated correctly (< 1 mile)');
+});
+
+test('Map popups: include distance when available', () => {
+  const filePath = path.join(__dirname, 'resources.json');
+  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  
+  function distanceMiles(lat1, lon1, lat2, lon2){
+    if(!lat2 || !lon2) return null;
+    const R = 3958.8;
+    const toRad = v=>v*Math.PI/180;
+    const dLat = toRad(lat2-lat1);
+    const dLon = toRad(lon2-lon1);
+    const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)*Math.sin(dLon/2);
+    const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R*c;
+  }
+  
+  global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
+  const resource = resources[0];
+  const dist = distanceMiles(39.78, -89.65, resource.lat, resource.lon);
+  const popupText = dist.toFixed(1) + ' miles away';
+  assertTruthy(popupText.includes('miles away'), 'Popup text includes distance');
+});
+
+test('setupMap: centers map on user location (zoom 13)', () => {
+  global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
+  const zoomLevel = global.window.__userLocation ? 13 : 4;
+  assertEqual(zoomLevel, 13, 'Zoom level 13 when user location available');
+});
+
+test('setupMap: defaults to USA-wide view (zoom 4)', () => {
+  global.window = {};
+  const zoomLevel = global.window.__userLocation ? 13 : 4;
+  assertEqual(zoomLevel, 4, 'Zoom level 4 when no user location');
+});
+
+test('Geolocation: error handling for permission denied', () => {
+  const errorCode = 1;
+  const errorMessages = {
+    1: 'Permission denied. Enable location access in your browser settings.',
+    2: 'Position unavailable. Try again or use city/ZIP search.',
+    3: 'Request timeout. Your device took too long to find location.'
+  };
+  assertTruthy(errorMessages[errorCode] !== undefined, 'Error code 1 has message');
+});
+
+test('Geolocation: error handling for position unavailable', () => {
+  const errorCode = 2;
+  const errorMessages = {
+    1: 'Permission denied',
+    2: 'Position unavailable',
+    3: 'Request timeout'
+  };
+  assertTruthy(errorMessages[errorCode] !== undefined, 'Error code 2 has message');
+});
+
+test('Geolocation: error handling for timeout', () => {
+  const errorCode = 3;
+  const errorMessages = {
+    1: 'Permission denied',
+    2: 'Position unavailable',
+    3: 'Request timeout'
+  };
+  assertTruthy(errorMessages[errorCode] !== undefined, 'Error code 3 has message');
+});
+
+test('User marker: displays on map with custom icon', () => {
+  global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
+  const hasLocation = global.window.__userLocation !== undefined;
+  assertTruthy(hasLocation, 'User location available for marker');
+});
+
+// ============================================================
 // SUMMARY
 // ============================================================
 

@@ -51,8 +51,10 @@ function renderResults(list){
   list.forEach(it=>{
     const el = document.createElement('div');
     el.className = 'card';
+    const distance = (window.__userLocation && it.lat && it.lon) ? 
+      ' • <strong>'+distanceMiles(window.__userLocation.lat, window.__userLocation.lon, it.lat, it.lon).toFixed(1)+' miles</strong>' : '';
     el.innerHTML = `<h4><a href="#" onclick="openDetail('${escapeHtml(it.id)}');return false;">${escapeHtml(it.name)}</a>${it.verified?'<span class="verified">Verified</span>':''}</h4>
-      <div class="meta">${escapeHtml(it.type)} — ${escapeHtml(it.city)} ${it.zip ? '• '+escapeHtml(it.zip):''}${it.capacityStatus?'<span class="capacity">'+escapeHtml(it.capacityStatus)+'</span>':''}</div>
+      <div class="meta">${escapeHtml(it.type)} — ${escapeHtml(it.city)} ${it.zip ? '• '+escapeHtml(it.zip):''}${distance}${it.capacityStatus?'<span class="capacity">'+escapeHtml(it.capacityStatus)+'</span>':''}</div>
       <div>${escapeHtml(it.address || '')}</div>
       <div>${it.phone?'<strong>Phone:</strong> <a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>':''}</div>
       ${it.website?'<div><a href="'+escapeHtml(it.website)+'" target="_blank" rel="noopener">Website</a></div>':''}
@@ -109,24 +111,35 @@ async function geolocateAndSearch(){
   navigator.geolocation.getCurrentPosition(async (pos)=>{
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     window.__userLocation = {lat, lon};
-    console.log('Location found:', lat, lon);
+    console.log('✓ Location found:', lat.toFixed(4), lon.toFixed(4));
     
     // Don't clear search, just perform search with location filter
     const q = document.getElementById('query').value.trim();
     const filter = document.getElementById('filter').value;
     const all = await loadResources();
-    console.log('All resources:', all.length);
+    console.log('✓ Loaded', all.length, 'resources');
     
     let results = all.filter(r=>matchText(r,q));
+    console.log('✓ Text matched:', results.length, 'resources');
+    
     if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
+    console.log('✓ After type filter:', results.length, 'resources');
+    
     results = results.filter(r=>passesRefinements(r));
+    console.log('✓ After refinements:', results.length, 'resources');
     
     // Filter and sort by distance
     results = results.map(r=>{
       const d = distanceMiles(lat, lon, r.lat, r.lon);
       return {r:r, d:d};
     })
-      .filter(x=>x.d===null || x.d<=50)
+      .filter(x=>{
+        const withinRange = x.d===null || x.d<=50;
+        if(withinRange && x.d !== null){
+          console.log('  📍', x.r.name, ':', x.d.toFixed(2), 'miles');
+        }
+        return withinRange;
+      })
       .sort((a,b)=>{
         if(a.d===null) return 1;
         if(b.d===null) return -1;
@@ -134,13 +147,17 @@ async function geolocateAndSearch(){
       })
       .map(x=>x.r);
     
-    console.log('Filtered results:', results.length);
+    console.log('✓ After distance filter/sort:', results.length, 'resources');
     renderResults(results);
     resultsDiv.scrollIntoView({behavior:'smooth'});
     
   }, (err)=>{
-    console.error('Geolocation error:', err);
-    resultsDiv.innerHTML = '<p class="hint">❌ Location access denied or unavailable. Please enter a city or ZIP code instead.</p>';
+    console.error('❌ Geolocation error:', err.code, err.message);
+    let msg = '❌ Location access denied or unavailable. Please enter a city or ZIP code instead.';
+    if(err.code === 1) msg = '❌ Permission denied. Enable location access in your browser settings.';
+    if(err.code === 2) msg = '❌ Position unavailable. Try again or use city/ZIP search.';
+    if(err.code === 3) msg = '❌ Request timeout. Your device took too long to find location.';
+    resultsDiv.innerHTML = '<p class="hint">'+msg+'</p>';
   }, {timeout:8000, enableHighAccuracy:false});
 }
 
@@ -177,15 +194,41 @@ function showMapView(){
 async function setupMap(){
   const container = document.getElementById('results');
   container.innerHTML = '<div id="map" style="height:400px;border-radius:8px;overflow:hidden"></div>';
-  const map = L.map('map').setView([37.8, -96], 4);
+  
+  // Determine map center: use user location if available, otherwise Springfield IL
+  const center = window.__userLocation ? [window.__userLocation.lat, window.__userLocation.lon] : [39.78, -89.65];
+  const zoomLevel = window.__userLocation ? 13 : 4;
+  
+  const map = L.map('map').setView(center, zoomLevel);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+  
   const all = await loadResources();
   all.forEach(it=>{
     if(it.lat && it.lon){
+      // Add distance to popup if user has location
+      let popupText = '<strong>'+escapeHtml(it.name)+'</strong><br/>'+escapeHtml(it.city);
+      if(window.__userLocation){
+        const dist = distanceMiles(window.__userLocation.lat, window.__userLocation.lon, it.lat, it.lon);
+        popupText += '<br/><em>'+dist.toFixed(1)+' miles away</em>';
+      }
+      if(it.phone) popupText += '<br/><a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>';
+      
       const marker = L.marker([it.lat,it.lon]).addTo(map);
-      marker.bindPopup('<strong>'+escapeHtml(it.name)+'</strong><br/>'+escapeHtml(it.city)+ (it.phone?'<br/><a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>':''));
+      marker.bindPopup(popupText);
     }
   });
+  
+  // Add user location marker if available
+  if(window.__userLocation){
+    const userMarker = L.marker([window.__userLocation.lat, window.__userLocation.lon], {
+      icon: L.icon({
+        iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI4IiBmaWxsPSIjNDI4NWY0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      })
+    }).addTo(map);
+    userMarker.bindPopup('📍 Your location');
+  }
 }
 
 function showListView(){
