@@ -30,8 +30,8 @@
     "wheelchair": true,
     "source": "samhsa",
     "sourceId": "1",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T21:10:53.349Z",
+    "lastFetched": "2025-12-06T21:10:53.350Z"
   },
   {
     "id": "hud-hud-001",
@@ -64,8 +64,8 @@
     "wheelchair": true,
     "source": "hud",
     "sourceId": "hud-001",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T21:10:53.350Z",
+    "lastFetched": "2025-12-06T21:10:53.350Z"
   },
   {
     "id": "samhsa-2",
@@ -98,8 +98,8 @@
     "wheelchair": true,
     "source": "samhsa",
     "sourceId": "2",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T21:10:53.350Z",
+    "lastFetched": "2025-12-06T21:10:53.350Z"
   },
   {
     "id": "hud-hud-002",
@@ -132,7 +132,7 @@
     "wheelchair": true,
     "source": "hud",
     "sourceId": "hud-002",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T21:10:53.350Z",
+    "lastFetched": "2025-12-06T21:10:53.350Z"
   }
 ]
