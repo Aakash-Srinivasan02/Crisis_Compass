@@ -63,12 +63,14 @@ function renderResults(list){
   })
 }
 
-async function doSearch(userTriggered){
+function doSearch(userTriggered){
   const q = document.getElementById('query').value.trim();
   const filter = document.getElementById('filter').value;
+  const stateFilter = document.getElementById('stateFilter').value;
   const all = await loadResources();
   let results = all.filter(r=>matchText(r,q));
   if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
+  if(stateFilter) results = results.filter(r=>r.state===stateFilter);
   results = results.filter(r=>passesRefinements(r));
   // if a geolocation search was performed, userLat/Lon may be set
   if(window.__userLocation){
