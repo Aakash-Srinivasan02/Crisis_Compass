@@ -1,5 +1,73 @@
 [
   {
+    "id": "hud-hud-003",
+    "name": "California Homeless Services",
+    "type": "shelter",
+    "services": [
+      "shelter",
+      "meals",
+      "case-management"
+    ],
+    "address": "456 Hollywood Blvd",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90211",
+    "lat": 34.0928,
+    "lon": -118.3287,
+    "phone": "213-555-0500",
+    "website": "https://cahomeless.org",
+    "hours": "Call for hours",
+    "intake": "Walk-ins welcome",
+    "eligibility": "Low income",
+    "cost": "Free",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "families",
+      "individuals"
+    ],
+    "petFriendly": false,
+    "walkIns": true,
+    "wheelchair": true,
+    "source": "hud",
+    "sourceId": "hud-003",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "samhsa-3",
+    "name": "California Recovery Services",
+    "type": "substance",
+    "services": [
+      "detox",
+      "counseling",
+      "rehab"
+    ],
+    "address": "789 Sunset Blvd",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90210",
+    "lat": 34.0522,
+    "lon": -118.2437,
+    "phone": "213-555-0100",
+    "website": "https://carecovery.org",
+    "hours": "Call for hours",
+    "intake": "Call ahead",
+    "eligibility": "No ID required",
+    "cost": "Sliding scale",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "adults",
+      "teens"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "samhsa",
+    "sourceId": "3",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
     "id": "samhsa-1",
     "name": "Downtown Recovery Center",
     "type": "substance",
@@ -30,8 +98,76 @@
     "wheelchair": true,
     "source": "samhsa",
     "sourceId": "1",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "samhsa-6",
+    "name": "Florida Addiction Treatment",
+    "type": "substance",
+    "services": [
+      "detox",
+      "rehab",
+      "aftercare"
+    ],
+    "address": "789 Palm Ave",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33101",
+    "lat": 25.7617,
+    "lon": -80.1918,
+    "phone": "305-555-0400",
+    "website": "https://fladdiction.org",
+    "hours": "Call for hours",
+    "intake": "Call ahead",
+    "eligibility": "No ID required",
+    "cost": "Sliding scale",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "adults",
+      "teens"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "samhsa",
+    "sourceId": "6",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "hud-hud-006",
+    "name": "Florida Supportive Housing",
+    "type": "housing",
+    "services": [
+      "housing",
+      "mental-health-services",
+      "case-management"
+    ],
+    "address": "456 Miami Beach Blvd",
+    "city": "Miami Beach",
+    "state": "FL",
+    "zip": "33139",
+    "lat": 25.7907,
+    "lon": -80.13,
+    "phone": "305-555-0800",
+    "website": "https://flhousing.org",
+    "hours": "Call for hours",
+    "intake": "Walk-ins welcome",
+    "eligibility": "Low income",
+    "cost": "Free",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "families",
+      "individuals"
+    ],
+    "petFriendly": false,
+    "walkIns": true,
+    "wheelchair": true,
+    "source": "hud",
+    "sourceId": "hud-006",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
   },
   {
     "id": "hud-hud-001",
@@ -64,8 +200,8 @@
     "wheelchair": true,
     "source": "hud",
     "sourceId": "hud-001",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
   },
   {
     "id": "samhsa-2",
@@ -98,8 +234,76 @@
     "wheelchair": true,
     "source": "samhsa",
     "sourceId": "2",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "hud-hud-005",
+    "name": "New York City Shelter",
+    "type": "shelter",
+    "services": [
+      "shelter",
+      "meals",
+      "case-management"
+    ],
+    "address": "123 Manhattan Ave",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10002",
+    "lat": 40.7831,
+    "lon": -73.9712,
+    "phone": "212-555-0700",
+    "website": "https://nyc-shelter.org",
+    "hours": "Call for hours",
+    "intake": "Walk-ins welcome",
+    "eligibility": "Low income",
+    "cost": "Free",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "families",
+      "individuals"
+    ],
+    "petFriendly": false,
+    "walkIns": true,
+    "wheelchair": true,
+    "source": "hud",
+    "sourceId": "hud-005",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "samhsa-5",
+    "name": "New York Crisis Center",
+    "type": "mental-health",
+    "services": [
+      "crisis-intervention",
+      "counseling",
+      "hotline"
+    ],
+    "address": "123 Broadway",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10001",
+    "lat": 40.7128,
+    "lon": -74.006,
+    "phone": "212-555-0300",
+    "website": "https://nycrisis.org",
+    "hours": "Call for hours",
+    "intake": "Call ahead",
+    "eligibility": "No ID required",
+    "cost": "Sliding scale",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "adults",
+      "teens"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "samhsa",
+    "sourceId": "5",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
   },
   {
     "id": "hud-hud-002",
@@ -132,7 +336,75 @@
     "wheelchair": true,
     "source": "hud",
     "sourceId": "hud-002",
-    "sourceUpdateDate": "2025-12-06T21:06:17.196Z",
-    "lastFetched": "2025-12-06T21:06:17.196Z"
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "hud-hud-004",
+    "name": "Texas Housing Authority",
+    "type": "housing",
+    "services": [
+      "housing",
+      "case-management",
+      "support-services"
+    ],
+    "address": "789 Dallas St",
+    "city": "Dallas",
+    "state": "TX",
+    "zip": "75201",
+    "lat": 32.7767,
+    "lon": -96.797,
+    "phone": "214-555-0600",
+    "website": "https://txhousing.org",
+    "hours": "Call for hours",
+    "intake": "Walk-ins welcome",
+    "eligibility": "Low income",
+    "cost": "Free",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "families",
+      "individuals"
+    ],
+    "petFriendly": false,
+    "walkIns": true,
+    "wheelchair": true,
+    "source": "hud",
+    "sourceId": "hud-004",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
+  },
+  {
+    "id": "samhsa-4",
+    "name": "Texas Mental Health Center",
+    "type": "mental-health",
+    "services": [
+      "counseling",
+      "therapy",
+      "support-groups"
+    ],
+    "address": "456 Houston St",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77001",
+    "lat": 29.7604,
+    "lon": -95.3698,
+    "phone": "713-555-0200",
+    "website": "https://txmentalhealth.org",
+    "hours": "Call for hours",
+    "intake": "Call ahead",
+    "eligibility": "No ID required",
+    "cost": "Sliding scale",
+    "capacityStatus": "Call first",
+    "clientTypes": [
+      "adults",
+      "teens"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "samhsa",
+    "sourceId": "4",
+    "sourceUpdateDate": "2025-12-06T22:44:51.171Z",
+    "lastFetched": "2025-12-06T22:44:51.171Z"
   }
 ]

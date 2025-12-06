@@ -38,6 +38,62 @@ const MOCK_SAMHSA = [
     website: "https://mha-illinois.org",
     type: "outpatient",
     services: ["counseling", "medication-management", "support-groups"]
+  },
+  {
+    id: 3,
+    name: "California Recovery Services",
+    address1: "789 Sunset Blvd",
+    city: "Los Angeles",
+    state: "CA",
+    zip: "90210",
+    latitude: 34.0522,
+    longitude: -118.2437,
+    phone: "213-555-0100",
+    website: "https://carecovery.org",
+    type: "residential",
+    services: ["detox", "counseling", "rehab"]
+  },
+  {
+    id: 4,
+    name: "Texas Mental Health Center",
+    address1: "456 Houston St",
+    city: "Houston",
+    state: "TX",
+    zip: "77001",
+    latitude: 29.7604,
+    longitude: -95.3698,
+    phone: "713-555-0200",
+    website: "https://txmentalhealth.org",
+    type: "outpatient",
+    services: ["counseling", "therapy", "support-groups"]
+  },
+  {
+    id: 5,
+    name: "New York Crisis Center",
+    address1: "123 Broadway",
+    city: "New York",
+    state: "NY",
+    zip: "10001",
+    latitude: 40.7128,
+    longitude: -74.0060,
+    phone: "212-555-0300",
+    website: "https://nycrisis.org",
+    type: "crisis",
+    services: ["crisis-intervention", "counseling", "hotline"]
+  },
+  {
+    id: 6,
+    name: "Florida Addiction Treatment",
+    address1: "789 Palm Ave",
+    city: "Miami",
+    state: "FL",
+    zip: "33101",
+    latitude: 25.7617,
+    longitude: -80.1918,
+    phone: "305-555-0400",
+    website: "https://fladdiction.org",
+    type: "residential",
+    services: ["detox", "rehab", "aftercare"]
   }
 ];
 
@@ -69,6 +125,62 @@ const MOCK_HUD = [
     website: "https://supporthousing.org",
     programType: "PSH",
     services: ["housing", "case-management", "mental-health-services"]
+  },
+  {
+    id: "hud-003",
+    name: "California Homeless Services",
+    address: "456 Hollywood Blvd",
+    city: "Los Angeles",
+    state: "CA",
+    zip: "90211",
+    latitude: 34.0928,
+    longitude: -118.3287,
+    phone: "213-555-0500",
+    website: "https://cahomeless.org",
+    programType: "ES",
+    services: ["shelter", "meals", "case-management"]
+  },
+  {
+    id: "hud-004",
+    name: "Texas Housing Authority",
+    address: "789 Dallas St",
+    city: "Dallas",
+    state: "TX",
+    zip: "75201",
+    latitude: 32.7767,
+    longitude: -96.7970,
+    phone: "214-555-0600",
+    website: "https://txhousing.org",
+    programType: "PSH",
+    services: ["housing", "case-management", "support-services"]
+  },
+  {
+    id: "hud-005",
+    name: "New York City Shelter",
+    address: "123 Manhattan Ave",
+    city: "New York",
+    state: "NY",
+    zip: "10002",
+    latitude: 40.7831,
+    longitude: -73.9712,
+    phone: "212-555-0700",
+    website: "https://nyc-shelter.org",
+    programType: "ES",
+    services: ["shelter", "meals", "case-management"]
+  },
+  {
+    id: "hud-006",
+    name: "Florida Supportive Housing",
+    address: "456 Miami Beach Blvd",
+    city: "Miami Beach",
+    state: "FL",
+    zip: "33139",
+    latitude: 25.7907,
+    longitude: -80.1300,
+    phone: "305-555-0800",
+    website: "https://flhousing.org",
+    programType: "PSH",
+    services: ["housing", "mental-health-services", "case-management"]
   }
 ];
 
