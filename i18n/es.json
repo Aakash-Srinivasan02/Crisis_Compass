@@ -1,0 +1,23 @@
+{
+  "hotline_main": "Llame al 988 — Línea de vida para suicidio y crisis",
+  "hotline_dv": "Llame al 1-800-799-7233 — Línea de violencia doméstica",
+  "low_data": "Modo de datos bajos",
+  "exit": "Salir",
+  "privacy": "Privacidad",
+  "find_help": "Encuentra ayuda ahora",
+  "search_label": "Buscar por ciudad, código postal o servicio",
+  "search_placeholder": "Ciudad, código postal o servicio (p. ej., refugio, desintoxicación)",
+  "find_cta": "Buscar servicios locales verificados",
+  "list_view": "Vista de lista",
+  "map_view": "Vista de mapa",
+  "client_type": "Tipo de cliente:",
+  "families": "Familias",
+  "women": "Mujeres",
+  "men": "Hombres",
+  "youth": "Jóvenes",
+  "veterans": "Veteranos",
+  "requirements": "Requisitos:",
+  "pet_friendly": "Admite mascotas",
+  "walkins": "Acepta sin cita",
+  "wheelchair": "Accesible en silla de ruedas"
+}

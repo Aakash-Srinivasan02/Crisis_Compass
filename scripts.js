@@ -1,0 +1,268 @@
+let resourcesCache = null;
+let mapLoaded = false;
+
+async function loadResources(){
+  if(resourcesCache) return resourcesCache;
+  try{
+    const res = await fetch('resources.json');
+    resourcesCache = await res.json();
+    return resourcesCache;
+  }catch(e){
+    console.error('Failed to load resources', e);
+    return [];
+  }
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+}
+
+function matchText(item, q){
+  if(!q) return true;
+  q = q.toLowerCase();
+  return [item.name, item.city, item.zip, (item.services||[]).join(' '), item.type].join(' ').toLowerCase().includes(q);
+}
+
+function passesRefinements(item){
+  // client type
+  const clients = Array.from(document.querySelectorAll('input[name="client"]:checked')).map(i=>i.value);
+  if(clients.length){
+    if(!item.clientTypes || !clients.some(c=> (item.clientTypes||[]).includes(c))) return false;
+  }
+  const reqs = Array.from(document.querySelectorAll('input[name="req"]:checked')).map(i=>i.value);
+  if(reqs.length){
+    if(reqs.includes('pet_friendly') && !item.petFriendly) return false;
+    if(reqs.includes('walkins') && !item.walkIns) return false;
+    if(reqs.includes('wheelchair') && !item.wheelchair) return false;
+  }
+  return true;
+}
+
+function renderResults(list){
+  const container = document.getElementById('results');
+  if(!container) return;
+  container.innerHTML = '';
+  if(list.length===0){
+    container.innerHTML = '<p class="hint">No matches found. Try another city, ZIP, or service.</p>';
+    return;
+  }
+  list.forEach(it=>{
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `<h4><a href="#" onclick="openDetail('${escapeHtml(it.id)}');return false;">${escapeHtml(it.name)}</a>${it.verified?'<span class="verified">Verified</span>':''}</h4>
+      <div class="meta">${escapeHtml(it.type)} — ${escapeHtml(it.city)} ${it.zip ? '• '+escapeHtml(it.zip):''}${it.capacityStatus?'<span class="capacity">'+escapeHtml(it.capacityStatus)+'</span>':''}</div>
+      <div>${escapeHtml(it.address || '')}</div>
+      <div>${it.phone?'<strong>Phone:</strong> <a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>':''}</div>
+      ${it.website?'<div><a href="'+escapeHtml(it.website)+'" target="_blank" rel="noopener">Website</a></div>':''}
+    `;
+    container.appendChild(el);
+  })
+}
+
+async function doSearch(userTriggered){
+  const q = document.getElementById('query').value.trim();
+  const filter = document.getElementById('filter').value;
+  const all = await loadResources();
+  let results = all.filter(r=>matchText(r,q));
+  if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
+  results = results.filter(r=>passesRefinements(r));
+  // if a geolocation search was performed, userLat/Lon may be set
+  if(window.__userLocation){
+    results = results.map(r=>({r:r,d:distanceMiles(window.__userLocation.lat, window.__userLocation.lon, r.lat, r.lon)}))
+      .filter(x=>x.d!==null && x.d<=50) // 50 mile radius default
+      .sort((a,b)=>a.d-b.d)
+      .map(x=>x.r);
+  }
+  renderResults(results);
+  if(userTriggered) document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function quickExit(){
+  try{ window.location.replace('https://www.weather.com'); }catch(e){ window.location.href='https://www.weather.com'; }
+}
+
+function toggleLowBandwidth(){
+  const on = document.body.classList.toggle('low-bandwidth');
+  localStorage.setItem('lowBandwidth', on? '1':'0');
+  if(on){
+    alert('Low‑data mode on: maps and images will be disabled.');
+  }
+}
+
+async function geolocateAndSearch(){
+  if(!navigator.geolocation){ alert('Geolocation not supported'); return; }
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+    window.__userLocation = {lat, lon};
+    await doSearch(true);
+  }, (err)=>{ alert('Location denied or unavailable'); }, {timeout:8000});
+}
+
+function distanceMiles(lat1, lon1, lat2, lon2){
+  if(!lat2 || !lon2) return null;
+  const R = 3958.8; // miles
+  const toRad = v=>v*Math.PI/180;
+  const dLat = toRad(lat2-lat1);
+  const dLon = toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)*Math.sin(dLon/2);
+  const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R*c;
+}
+
+function showMapView(){
+  if(document.body.classList.contains('low-bandwidth')){ alert('Map disabled in low-data mode'); return; }
+  document.getElementById('listViewBtn').classList.remove('active');
+  document.getElementById('mapViewBtn').classList.add('active');
+  // lazy load Leaflet if needed
+  if(!mapLoaded){
+    mapLoaded = true;
+    const link = document.createElement('link');
+    link.rel='stylesheet'; link.href='https://unpkg.com/leaflet@1.9.3/dist/leaflet.css';
+    document.head.appendChild(link);
+    const s = document.createElement('script');
+    s.src='https://unpkg.com/leaflet@1.9.3/dist/leaflet.js';
+    s.onload = setupMap;
+    document.body.appendChild(s);
+  }else{
+    setupMap();
+  }
+}
+
+async function setupMap(){
+  const container = document.getElementById('results');
+  container.innerHTML = '<div id="map" style="height:400px;border-radius:8px;overflow:hidden"></div>';
+  const map = L.map('map').setView([37.8, -96], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+  const all = await loadResources();
+  all.forEach(it=>{
+    if(it.lat && it.lon){
+      const marker = L.marker([it.lat,it.lon]).addTo(map);
+      marker.bindPopup('<strong>'+escapeHtml(it.name)+'</strong><br/>'+escapeHtml(it.city)+ (it.phone?'<br/><a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>':''));
+    }
+  });
+}
+
+function showListView(){
+  document.getElementById('mapViewBtn').classList.remove('active');
+  document.getElementById('listViewBtn').classList.add('active');
+  doSearch(false);
+}
+
+// Detail view and reporting
+function openDetail(id){
+  const all = resourcesCache || [];
+  const item = all.find(r=>r.id===id);
+  if(!item) return;
+  const body = document.getElementById('detailBody');
+  body.innerHTML = `
+    <h2>${escapeHtml(item.name)} ${item.verified?'<span class="verified">Verified</span>':''}</h2>
+    <div class="meta">${escapeHtml(item.type)} — ${escapeHtml(item.city)} ${item.zip? '• '+escapeHtml(item.zip):''}</div>
+    <p>${escapeHtml(item.address||'')}</p>
+    <p><strong>Phone:</strong> <a href="tel:${escapeHtml(item.phone)}">${escapeHtml(item.phone)}</a></p>
+    ${item.website?'<p><a href="'+escapeHtml(item.website)+'" target="_blank" rel="noopener">Website</a></p>':''}
+    <p><strong>Hours:</strong> ${escapeHtml(item.hours||'Call for hours')}</p>
+    <p><strong>Intake:</strong> ${escapeHtml(item.intake||'Call ahead')}</p>
+    <p><strong>Eligibility:</strong> ${escapeHtml(item.eligibility||'See provider')}</p>
+    <p><strong>Cost:</strong> ${escapeHtml(item.cost||'Free or sliding scale')}</p>
+    <p><strong>Capacity:</strong> ${escapeHtml(item.capacityStatus||'Call first')}</p>
+  `;
+  const reportArea = document.getElementById('reportArea');
+  reportArea.innerHTML = `
+    <h3>Report an issue (anonymous)</h3>
+    <form onsubmit="submitReport(event,'${escapeHtml(id)}')">
+      <label for="problem">What's wrong?</label>
+      <select id="problem" required>
+        <option value="phone">Wrong phone</option>
+        <option value="closed">Closed</option>
+        <option value="other">Other</option>
+      </select>
+      <div><textarea id="details" placeholder="Details (optional)" rows="3"></textarea></div>
+      <div><button class="small-btn">Send report</button></div>
+    </form>
+  `;
+  const modal = document.getElementById('detailModal');
+  modal.setAttribute('aria-hidden','false');
+}
+
+function closeDetail(){
+  const modal = document.getElementById('detailModal');
+  modal.setAttribute('aria-hidden','true');
+}
+
+function submitReport(e,id){
+  e.preventDefault();
+  const problem = document.getElementById('problem').value;
+  const details = document.getElementById('details').value;
+  const reports = JSON.parse(localStorage.getItem('reports||[]')||'[]');
+  reports.push({id,problem,details,t: new Date().toISOString()});
+  localStorage.setItem('reports||[]', JSON.stringify(reports));
+  alert('Thanks — report saved for review');
+  closeDetail();
+}
+
+// allow Enter to search and initialize low-bandwidth preference
+document.addEventListener('DOMContentLoaded',()=>{
+  const q = document.getElementById('query');
+  q.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ doSearch(true); e.preventDefault(); } });
+  loadResources().then(()=>doSearch(false));
+  if(localStorage.getItem('lowBandwidth')==='1') document.body.classList.add('low-bandwidth');
+});
+
+// Internationalization (i18n) support
+async function loadTranslation(lang){
+  if(!lang || lang==='auto') return null;
+  try{
+    const res = await fetch('i18n/' + lang + '.json');
+    if(!res.ok) throw new Error('no translation');
+    return await res.json();
+  }catch(e){
+    return null;
+  }
+}
+
+function applyTranslations(trans){
+  if(!trans) return;
+  // text content
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(trans[key]) el.innerText = trans[key];
+  });
+  // placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(trans[key]) el.setAttribute('placeholder', trans[key]);
+  });
+  // labels for inputs
+  document.querySelectorAll('[data-i18n-label]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-label');
+    if(trans[key]){
+      // label may be a parent <label> element or the input itself
+      const parent = el.closest('label');
+      if(parent) parent.childNodes.forEach(n=>{ if(n.nodeType===3) n.textContent = trans[key]; });
+    }
+  });
+}
+
+async function setLanguage(lang){
+  if(lang==='auto'){
+    const nav = navigator.language || navigator.userLanguage || 'en';
+    lang = nav.split('-')[0];
+  }
+  localStorage.setItem('lang', lang);
+  const trans = await loadTranslation(lang);
+  if(trans) applyTranslations(trans);
+  else if(lang!=='en'){
+    alert('Translation for "'+lang+'" not available. Showing English.');
+    const en = await loadTranslation('en');
+    if(en) applyTranslations(en);
+  }
+}
+
+// initialize language on load
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const saved = localStorage.getItem('lang') || 'auto';
+  const select = document.getElementById('langSelect');
+  if(select) select.value = saved;
+  await setLanguage(saved);
+});

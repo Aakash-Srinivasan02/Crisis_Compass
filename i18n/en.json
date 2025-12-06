@@ -1,0 +1,23 @@
+{
+  "hotline_main": "Call 988 — Suicide & Crisis Lifeline",
+  "hotline_dv": "Call 1-800-799-7233 — Domestic Violence Hotline",
+  "low_data": "Low‑Data Mode",
+  "exit": "Exit",
+  "privacy": "Privacy",
+  "find_help": "Find Help Now",
+  "search_label": "Search by city, zip, or service",
+  "search_placeholder": "City, ZIP, or service (e.g., shelter, detox)",
+  "find_cta": "Find Local, Verified Help",
+  "list_view": "List View",
+  "map_view": "Map View",
+  "client_type": "Client type:",
+  "families": "Families",
+  "women": "Women",
+  "men": "Men",
+  "youth": "Youth",
+  "veterans": "Veterans",
+  "requirements": "Requirements:",
+  "pet_friendly": "Pet-friendly",
+  "walkins": "Walk-ins",
+  "wheelchair": "Wheelchair"
+}

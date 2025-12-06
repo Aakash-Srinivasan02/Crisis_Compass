@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Bridge — Find local, verified help</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="top-utility">
+    <div class="hotline">
+      <a href="tel:988" class="hotline-link" data-i18n="hotline_main">Call 988 — Suicide & Crisis Lifeline</a>
+      <a href="tel:8007997233" class="hotline-link" data-i18n="hotline_dv">Call 1-800-799-7233 — Domestic Violence Hotline</a>
+    </div>
+    <div class="utility-controls">
+      <label for="langSelect" class="sr-only">Language</label>
+      <select id="langSelect" onchange="setLanguage(this.value)">
+        <option value="auto">Auto-detect</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+      </select>
+      <button id="lowBwBtn" class="small-btn" onclick="toggleLowBandwidth()" data-i18n="low_data">Low‑Data Mode</button>
+      <button id="quickExit" class="quick-exit" onclick="quickExit()" data-i18n="exit">Exit</button>
+      <a href="privacy.html" class="privacy-link" data-i18n="privacy">Privacy</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <h1>The Bridge</h1>
+    <p class="mission">The Bridge connects people in crisis to verified, local services for housing, recovery, and mental health—fast, free, and confidential.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="search-label" class="search-box">
+      <h2 id="search-label" data-i18n="find_help">Find Help Now</h2>
+      <form id="searchForm" onsubmit="return false;" class="form-simple">
+        <label for="query" class="sr-only" data-i18n="search_label">Search by city, zip, or service</label>
+        <input id="query" name="query" data-i18n-placeholder="search_placeholder" placeholder="City, ZIP, or service (e.g., shelter, detox)" autocomplete="off">
+        <select id="filter">
+          <option value="">All services</option>
+          <option value="shelter">Shelter</option>
+          <option value="housing">Housing</option>
+          <option value="mental-health">Mental health</option>
+          <option value="substance">Substance use</option>
+          <option value="legal">Legal aid</option>
+        </select>
+        <button id="findBtn" class="cta" onclick="doSearch(true)" data-i18n="find_cta">Find Local, Verified Help</button>
+        <button type="button" class="small-btn" onclick="geolocateAndSearch()">Use my location</button>
+      </form>
+
+      <div class="view-toggle">
+        <button id="listViewBtn" class="active small-btn" onclick="showListView()" data-i18n="list_view">List View</button>
+        <button id="mapViewBtn" class="small-btn" onclick="showMapView()" data-i18n="map_view">Map View</button>
+      </div>
+
+      <div class="refinement" id="refinement">
+        <label data-i18n="client_type">Client type:</label>
+        <label><input type="checkbox" name="client" value="families" data-i18n-label="families"> Families</label>
+        <label><input type="checkbox" name="client" value="women" data-i18n-label="women"> Women</label>
+        <label><input type="checkbox" name="client" value="men" data-i18n-label="men"> Men</label>
+        <label><input type="checkbox" name="client" value="youth" data-i18n-label="youth"> Youth</label>
+        <label><input type="checkbox" name="client" value="veterans" data-i18n-label="veterans"> Veterans</label>
+        <label style="margin-left:12px" data-i18n="requirements">Requirements:</label>
+        <label><input type="checkbox" name="req" value="pet_friendly" data-i18n-label="pet_friendly"> Pet-friendly</label>
+        <label><input type="checkbox" name="req" value="walkins" data-i18n-label="walkins"> Walk-ins</label>
+        <label><input type="checkbox" name="req" value="wheelchair" data-i18n-label="wheelchair"> Wheelchair</label>
+      </div>
+    </section>
+
+    <section id="results" aria-live="polite" class="results">
+      <p class="hint">Enter a city or ZIP, or choose a service, then tap "Find Local, Verified Help".</p>
+    </section>
+
+    <section class="info">
+      <h3>Our Values</h3>
+      <ul>
+        <li><strong>Privacy:</strong> Your choices and information stay confidential.</li>
+        <li><strong>Verified:</strong> We list only local services confirmed by partners.</li>
+        <li><strong>Access:</strong> Free, simple, and fast to use.</li>
+        <li><strong>Dignity:</strong> We treat everyone with respect and clear language.</li>
+      </ul>
+      <h3>In an emergency</h3>
+      <p>If you or someone is in immediate danger call 911 or your local crisis line.</p>
+    </section>
+  </main>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDetail()">Close</button>
+      <div id="detailBody"></div>
+      <div id="reportArea"></div>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
