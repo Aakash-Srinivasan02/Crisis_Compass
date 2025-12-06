@@ -201,14 +201,6 @@ function submitReport(e,id){
   closeDetail();
 }
 
-// allow Enter to search and initialize low-bandwidth preference
-document.addEventListener('DOMContentLoaded',()=>{
-  const q = document.getElementById('query');
-  q.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ doSearch(true); e.preventDefault(); } });
-  loadResources().then(()=>doSearch(false));
-  if(localStorage.getItem('lowBandwidth')==='1') document.body.classList.add('low-bandwidth');
-});
-
 // Internationalization (i18n) support
 async function loadTranslation(lang){
   if(!lang || lang==='auto') return null;
@@ -217,6 +209,7 @@ async function loadTranslation(lang){
     if(!res.ok) throw new Error('no translation');
     return await res.json();
   }catch(e){
+    console.warn('Failed to load translation for '+lang, e);
     return null;
   }
 }
@@ -253,16 +246,27 @@ async function setLanguage(lang){
   const trans = await loadTranslation(lang);
   if(trans) applyTranslations(trans);
   else if(lang!=='en'){
-    alert('Translation for "'+lang+'" not available. Showing English.');
     const en = await loadTranslation('en');
     if(en) applyTranslations(en);
   }
 }
 
-// initialize language on load
+// Single initialization on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async ()=>{
+  // Set up search input
+  const q = document.getElementById('query');
+  q.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ doSearch(true); e.preventDefault(); } });
+  
+  // Load low-bandwidth preference
+  if(localStorage.getItem('lowBandwidth')==='1') document.body.classList.add('low-bandwidth');
+  
+  // Initialize language
   const saved = localStorage.getItem('lang') || 'auto';
   const select = document.getElementById('langSelect');
   if(select) select.value = saved;
   await setLanguage(saved);
+  
+  // Load and display resources
+  await loadResources();
+  await doSearch(false);
 });
