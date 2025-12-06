@@ -46,7 +46,7 @@
       <form id="searchForm" onsubmit="return false;" class="form-simple">
         <label for="query" class="sr-only" data-i18n="search_label">Search by city, zip, or service</label>
         <input id="query" name="query" data-i18n-placeholder="search_placeholder" placeholder="City, ZIP, or service (e.g., shelter, detox)" autocomplete="off">
-        <select id="filter">
+        <select id="filter" onchange="doSearch(false)">
           <option value="">All services</option>
           <option value="shelter">Shelter</option>
           <option value="housing">Housing</option>
@@ -54,7 +54,7 @@
           <option value="substance">Substance use</option>
           <option value="legal">Legal aid</option>
         </select>
-        <select id="stateFilter">
+        <select id="stateFilter" onchange="doSearch(false)">
           <option value="">All states</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
