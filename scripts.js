@@ -42,6 +42,7 @@ function passesRefinements(item){
 function renderResults(list){
   const container = document.getElementById('results');
   if(!container) return;
+  console.log('renderResults called with', list.length, 'items');
   container.innerHTML = '';
   if(list.length===0){
     container.innerHTML = '<p class="hint">No matches found. Try another city, ZIP, or service.</p>';
@@ -98,18 +99,49 @@ function toggleLowBandwidth(){
 }
 
 async function geolocateAndSearch(){
-  if(!navigator.geolocation){ alert('Geolocation not supported on this device'); return; }
+  if(!navigator.geolocation){ 
+    alert('Geolocation not supported on this device. Please enter a city or ZIP code.');
+    return;
+  }
   const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = '<p class="hint">Finding your location...</p>';
+  resultsDiv.innerHTML = '<p class="hint">📍 Finding your location...</p>';
+  
   navigator.geolocation.getCurrentPosition(async (pos)=>{
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     window.__userLocation = {lat, lon};
-    resultsDiv.innerHTML = '<p class="hint">Searching within 50 miles of your location...</p>';
-    await doSearch(true);
+    console.log('Location found:', lat, lon);
+    
+    // Don't clear search, just perform search with location filter
+    const q = document.getElementById('query').value.trim();
+    const filter = document.getElementById('filter').value;
+    const all = await loadResources();
+    console.log('All resources:', all.length);
+    
+    let results = all.filter(r=>matchText(r,q));
+    if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
+    results = results.filter(r=>passesRefinements(r));
+    
+    // Filter and sort by distance
+    results = results.map(r=>{
+      const d = distanceMiles(lat, lon, r.lat, r.lon);
+      return {r:r, d:d};
+    })
+      .filter(x=>x.d===null || x.d<=50)
+      .sort((a,b)=>{
+        if(a.d===null) return 1;
+        if(b.d===null) return -1;
+        return a.d-b.d;
+      })
+      .map(x=>x.r);
+    
+    console.log('Filtered results:', results.length);
+    renderResults(results);
+    resultsDiv.scrollIntoView({behavior:'smooth'});
+    
   }, (err)=>{
-    resultsDiv.innerHTML = '<p class="hint">Location access denied. Please enter a city or ZIP code instead.</p>';
     console.error('Geolocation error:', err);
-  }, {timeout:8000});
+    resultsDiv.innerHTML = '<p class="hint">❌ Location access denied or unavailable. Please enter a city or ZIP code instead.</p>';
+  }, {timeout:8000, enableHighAccuracy:false});
 }
 
 function distanceMiles(lat1, lon1, lat2, lon2){
