@@ -5,7 +5,6 @@
  * Fetches real-time data from national APIs and normalizes to canonical schema
  */
 
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 

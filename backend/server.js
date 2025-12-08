@@ -254,7 +254,7 @@ app.use((req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error('❌ Error:', err);
   res.status(500).json({
     success: false,
