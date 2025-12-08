@@ -1,11 +1,11 @@
 name: Sync Real-Time Data from National APIs
 
 on:
-  schedule:
-    # Run daily at 2 AM UTC (adjust as needed)
-    - cron: '0 2 * * *'
+  - schedule:
+      # Run daily at 2 AM UTC (adjust as needed)
+      - cron: '0 2 * * *'
   # Allow manual trigger from Actions tab
-  workflow_dispatch:
+  - workflow_dispatch:
 
 jobs:
   sync:

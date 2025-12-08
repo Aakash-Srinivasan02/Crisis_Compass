@@ -9,6 +9,7 @@ Your Crisis Compass application now has complete **real-time API integration inf
 ## ✅ What's Complete
 
 ### 1. **ETL Data Pipeline** (`backend/etl.js`)
+
 - Fetches from SAMHSA, HUD, and other national APIs
 - Normalizes data to canonical schema (OpenReferral-compatible)
 - Deduplicates resources by name + city

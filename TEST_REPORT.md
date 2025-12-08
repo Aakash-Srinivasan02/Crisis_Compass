@@ -1,16 +1,17 @@
 # Crisis Compass: Comprehensive Test Report
 
 **Date:** December 6, 2025  
-**Status:** ✅ ALL TESTS PASSING (20/20)  
+**Status:** ✅ ALL TESTS PASSING (30/30)  
 **Command:** `npm test` or `node test-functions.js`
 
 ---
 
 ## Executive Summary
 
-All 20 function tests pass successfully, covering:
+All 30 function tests pass successfully, covering:
+
 - ✅ 9 Backend API functions
-- ✅ 11 Frontend JavaScript functions
+- ✅ 21 Frontend JavaScript functions
 
 The test suite validates core functionality across the entire Crisis Compass application stack.
 
@@ -34,7 +35,7 @@ BACKEND API TESTS (9 tests)
 ✅ API: paginate results correctly
 
 ═══════════════════════════════════════════════════════
-FRONTEND FUNCTION TESTS (11 tests)
+FRONTEND FUNCTION TESTS (21 tests)
 ═══════════════════════════════════════════════════════
 
 ✅ escapeHtml: escapes HTML special characters
@@ -48,9 +49,19 @@ FRONTEND FUNCTION TESTS (11 tests)
 ✅ Sorting: sorts resources by distance correctly
 ✅ Low-bandwidth mode: toggles correctly
 ✅ Language: persists to localStorage
+✅ geolocateAndSearch: filters resources within 50 miles
+✅ geolocateAndSearch: sorts results by distance (closest first)
+✅ renderResults: displays distance in results
+✅ Map popups: include distance when available
+✅ setupMap: centers map on user location (zoom 13)
+✅ setupMap: defaults to USA-wide view (zoom 4)
+✅ Geolocation: error handling for permission denied
+✅ Geolocation: error handling for position unavailable
+✅ Geolocation: error handling for timeout
+✅ User marker: displays on map with custom icon
 
 ═══════════════════════════════════════════════════════
-SUMMARY: 20 Passed, 0 Failed
+SUMMARY: 30 Passed, 0 Failed
 ═══════════════════════════════════════════════════════
 ```
 
@@ -59,6 +70,7 @@ SUMMARY: 20 Passed, 0 Failed
 ## Backend API Functions Tested
 
 ### 1. **calculateDistance(lat1, lon1, lat2, lon2)**
+
 **Purpose:** Calculate distance between two coordinates using Haversine formula  
 **Tests:**
 - Returns correct distance (~179 miles between Springfield IL and Chicago IL)
@@ -66,6 +78,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 2. **loadResources()**
+
 **Purpose:** Load and parse resources.json file  
 **Tests:**
 - File exists and is readable
@@ -74,6 +87,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 3. **validateResource(resource)**
+
 **Purpose:** Validate resource has required fields  
 **Tests:**
 - Passes with valid resource (id, name, type, address/coordinates)
@@ -81,6 +95,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 4. **Resource Schema**
+
 **Purpose:** Ensure all resources follow canonical schema  
 **Tests:**
 - All resources have id, name, type
@@ -89,6 +104,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 5. **API /api/health Endpoint**
+
 **Purpose:** Health check endpoint response  
 **Tests:**
 - Returns status: 'ok'
@@ -97,6 +113,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 6. **filterByType(resources, type)**
+
 **Purpose:** Filter resources by service type  
 **Tests:**
 - Correctly filters shelter types (3 resources → 1 shelter)
@@ -104,6 +121,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 7. **filterByClientType(resources, clientType)**
+
 **Purpose:** Filter resources by client type (families, veterans, etc.)  
 **Tests:**
 - Correctly filters by clientType (3 resources → 2 families)
@@ -111,6 +129,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 8. **paginate(items, limit, offset)**
+
 **Purpose:** Implement pagination for results  
 **Tests:**
 - Page 1: Returns first 3 items
@@ -123,6 +142,7 @@ SUMMARY: 20 Passed, 0 Failed
 ## Frontend JavaScript Functions Tested
 
 ### 1. **escapeHtml(str)**
+
 **Purpose:** Escape HTML special characters to prevent XSS  
 **Tests:**
 - Escapes `<script>` → `&lt;script&gt;`
@@ -132,6 +152,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 2. **matchText(item, query)**
+
 **Purpose:** Match query against resource properties  
 **Tests:**
 - Matches by name: "Hope" in "Hope Shelter"
@@ -143,6 +164,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 3. **distanceMiles(lat1, lon1, lat2, lon2)**
+
 **Purpose:** Frontend version of Haversine distance calculation  
 **Tests:**
 - Springfield IL to Chicago IL: ~179 miles (175-185 mi range)
@@ -151,6 +173,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 4. **passesRefinements(item, selectedClients, selectedReqs)**
+
 **Purpose:** Check if resource matches refinement filters  
 **Tests:**
 - No refinements: passes
@@ -162,6 +185,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 5. **loadTranslation(lang)**
+
 **Purpose:** Load translation JSON files  
 **Tests:**
 - English translation loads successfully
@@ -170,6 +194,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 6. **applyTranslations(trans, mockDOM)**
+
 **Purpose:** Apply translations to DOM elements  
 **Tests:**
 - Translations applied correctly ('query_label' → 'Buscar')
@@ -177,6 +202,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 7. **submitReport(id, problem, details)**
+
 **Purpose:** Store anonymous reports in localStorage  
 **Tests:**
 - Report stored successfully
@@ -186,6 +212,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 8. **quickExit()**
+
 **Purpose:** Quick exit to safe URL (privacy feature)  
 **Tests:**
 - Redirects to weather.com
@@ -194,6 +221,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 9. **Sorting by Distance**
+
 **Purpose:** Sort resources by proximity to user  
 **Tests:**
 - Closest resources first (5 mi before 10 mi)
@@ -203,6 +231,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 10. **toggleLowBandwidth()**
+
 **Purpose:** Toggle low-data mode  
 **Tests:**
 - Toggles on: enabled = true
@@ -211,6 +240,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Status:** ✅ PASS
 
 ### 11. **Language Persistence**
+
 **Purpose:** Persist language preference to localStorage  
 **Tests:**
 - Spanish language saved and retrieved
@@ -218,11 +248,58 @@ SUMMARY: 20 Passed, 0 Failed
 - localStorage key correctly set/retrieved
 **Status:** ✅ PASS
 
+### 12. **geolocateAndSearch()**
+
+**Purpose:** Filter and sort resources based on user geolocation  
+**Tests:**
+- Filters resources within 50 miles of user location
+- Sorts results by distance (closest first)
+**Status:** ✅ PASS
+
+### 13. **renderResults()**
+
+**Purpose:** Display search results with distance information  
+**Tests:**
+- Displays distance in results when available
+**Status:** ✅ PASS
+
+### 14. **Map Popups**
+
+**Purpose:** Include distance information in map popups  
+**Tests:**
+- Map popups include distance when available
+**Status:** ✅ PASS
+
+### 15. **setupMap()**
+
+**Purpose:** Initialize and configure the map view  
+**Tests:**
+- Centers map on user location with zoom 13
+- Defaults to USA-wide view with zoom 4
+**Status:** ✅ PASS
+
+### 16. **Geolocation Error Handling**
+
+**Purpose:** Handle geolocation API errors gracefully  
+**Tests:**
+- Handles permission denied error
+- Handles position unavailable error
+- Handles timeout error
+**Status:** ✅ PASS
+
+### 17. **User Marker**
+
+**Purpose:** Display user location marker on map  
+**Tests:**
+- Displays user marker on map with custom icon
+**Status:** ✅ PASS
+
 ---
 
 ## Test Coverage by Module
 
 ### Backend API (`backend/server.js`)
+
 - ✅ Distance calculation (Haversine)
 - ✅ Resource loading
 - ✅ Resource validation
@@ -235,6 +312,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Coverage:** 100% of core functions
 
 ### Frontend Search (`scripts.js`)
+
 - ✅ Text matching
 - ✅ Distance calculation
 - ✅ Refinement filtering
@@ -244,6 +322,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Coverage:** 100% of core functions
 
 ### Frontend Internationalization (`scripts.js`)
+
 - ✅ Translation loading
 - ✅ Translation application
 - ✅ Language persistence
@@ -251,6 +330,7 @@ SUMMARY: 20 Passed, 0 Failed
 **Coverage:** 100% of i18n functions
 
 ### Frontend Features (`scripts.js`)
+
 - ✅ Report submission
 - ✅ Low-bandwidth toggle
 - ✅ Quick exit
@@ -290,6 +370,7 @@ SUMMARY: 20 Passed, 0 Failed
 ## Running the Tests
 
 ### Run All Tests
+
 ```bash
 npm test
 # or
@@ -297,6 +378,7 @@ node test-functions.js
 ```
 
 ### Output
+
 ```
 ═══════════════════════════════════════════════════════
 ✅ BACKEND API TESTS (9/9 passing)
@@ -311,7 +393,7 @@ node test-functions.js
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests** | 20 |
+| **Total Tests** | 30 |
 | **Pass Rate** | 100% |
 | **Coverage** | All major functions |
 | **Edge Cases** | ✅ Tested |
@@ -338,12 +420,14 @@ These functions are tested via integration/manual testing:
 ## Recommendations
 
 ### Current Status
+
 ✅ **All core functions fully tested and passing**
 ✅ **No critical bugs found**
 ✅ **Error handling verified**
 ✅ **Edge cases covered**
 
 ### Next Steps (Optional Enhancements)
+
 1. Add browser-based integration tests (Jest + jsdom)
 2. Add E2E tests (Cypress/Playwright)
 3. Add performance benchmarks

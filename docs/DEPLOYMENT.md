@@ -23,7 +23,7 @@ This guide walks through deploying the Crisis Compass backend API to production.
    heroku config:set HUD_API_KEY=your_key
    ```
 
-3. **Create Procfile** (if not exists):
+3. **Create Profile** (if not exists):
    ```
    web: node backend/server.js
    worker: node backend/etl.js

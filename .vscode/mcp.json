@@ -5,9 +5,7 @@
 			"url": "https://api.githubcopilot.com/mcp/",
 			"headers": {
 				"Authorization": "${input:Authorization}"
-			},
-			"gallery": "https://api.mcp.github.com",
-			"version": "0.24.0"
+			}
 		}
 	},
 	"inputs": [

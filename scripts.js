@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* global L */
 let resourcesCache = null;
 let mapLoaded = false;
 
@@ -15,7 +17,7 @@ async function loadResources(){
 
 function escapeHtml(str){
   if(!str) return '';
-  return String(str).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+  return String(str).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 }
 
 function matchText(item, q){
@@ -63,7 +65,7 @@ function renderResults(list){
   })
 }
 
-function doSearch(userTriggered){
+async function doSearch(userTriggered){
   const q = document.getElementById('query').value.trim();
   const filter = document.getElementById('filter').value;
   const stateFilter = document.getElementById('stateFilter').value;
