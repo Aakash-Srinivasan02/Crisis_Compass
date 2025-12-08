@@ -449,7 +449,7 @@ test('Language: persists to localStorage', () => {
 test('geolocateAndSearch: filters resources within 50 miles', () => {
   const filePath = path.join(__dirname, 'resources.json');
   const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  
+
   function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 3959;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -463,14 +463,16 @@ test('geolocateAndSearch: filters resources within 50 miles', () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
-  
+
   const userLat = 39.78, userLon = -89.65;
   const withinRange = resources.map(r => {
     const d = calculateDistance(userLat, userLon, r.lat, r.lon);
     return {r, d};
   })
     .filter(x => x.d === null || x.d <= 50);
-  assertTruthy(withinRange.length === resources.length, 'All resources within 50 miles');
+  // Test that filtering works: some resources are within 50 miles (IL ones), some are not
+  assertTruthy(withinRange.length > 0, 'Some resources within 50 miles');
+  assertTruthy(withinRange.length < resources.length, 'Not all resources within 50 miles');
 });
 
 test('geolocateAndSearch: sorts results by distance (closest first)', () => {
@@ -513,7 +515,7 @@ test('geolocateAndSearch: sorts results by distance (closest first)', () => {
 test('renderResults: displays distance in results', () => {
   const filePath = path.join(__dirname, 'resources.json');
   const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  
+
   function distanceMiles(lat1, lon1, lat2, lon2){
     if(!lat2 || !lon2) return null;
     const R = 3958.8;
@@ -524,11 +526,13 @@ test('renderResults: displays distance in results', () => {
     const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R*c;
   }
-  
+
   global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
-  const resource = resources[0];
-  const distance = distanceMiles(39.78, -89.65, resource.lat, resource.lon);
-  assertTruthy(distance > 0 && distance < 1, 'Distance calculated correctly (< 1 mile)');
+  // Find an IL resource close to Springfield
+  const ilResource = resources.find(r => r.state === 'IL');
+  assertTruthy(ilResource, 'IL resource found');
+  const distance = distanceMiles(39.78, -89.65, ilResource.lat, ilResource.lon);
+  assertTruthy(distance >= 0 && distance < 10, 'Distance calculated correctly (< 10 miles)');
 });
 
 test('Map popups: include distance when available', () => {

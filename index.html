@@ -36,8 +36,19 @@
   </div>
 
   <header class="site-header">
-    <h1>Crisis Compass</h1>
-    <p class="mission">Crisis Compass connects people in crisis to verified, local services for housing, recovery, and mental health—fast, free, and confidential.</p>
+    <div class="header-content">
+      <div class="logo-section">
+        <span class="logo-icon">🏛️</span>
+        <div>
+          <h1>U.S. Department of Health & Human Services</h1>
+          <p class="mission">Substance Abuse and Mental Health Services Administration</p>
+        </div>
+      </div>
+      <div class="trust-indicators">
+        <span class="trust-badge">Official Government Website</span>
+        <span class="trust-badge">Verified Data Source</span>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -46,7 +57,7 @@
       <form id="searchForm" onsubmit="return false;" class="form-simple">
         <label for="query" class="sr-only" data-i18n="search_label">Search by city, zip, or service</label>
         <input id="query" name="query" data-i18n-placeholder="search_placeholder" placeholder="City, ZIP, or service (e.g., shelter, detox)" autocomplete="off">
-        <select id="filter" onchange="doSearch(false)">
+        <select id="filter" onchange="if (!document.getElementById('mapViewBtn').classList.contains('active')) doSearch(false)">
           <option value="">All services</option>
           <option value="shelter">Shelter</option>
           <option value="housing">Housing</option>
@@ -54,7 +65,7 @@
           <option value="substance">Substance use</option>
           <option value="legal">Legal aid</option>
         </select>
-        <select id="stateFilter" onchange="doSearch(false)">
+        <select id="stateFilter" onchange="if (!document.getElementById('mapViewBtn').classList.contains('active')) doSearch(false)">
           <option value="">All states</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
@@ -136,48 +147,51 @@
     </section>
 
     <section class="info">
-      <h3>Our Values</h3>
-      <ul>
-        <li><strong>Privacy:</strong> Your choices and information stay confidential.</li>
-        <li><strong>Verified:</strong> We list only local services confirmed by partners.</li>
-        <li><strong>Access:</strong> Free, simple, and fast to use.</li>
-        <li><strong>Dignity:</strong> We treat everyone with respect and clear language.</li>
-      </ul>
-      <h3>Services We Help With</h3>
-      <div class="service-grid">
-        <div class="service-item">
-          <div class="service-icon">🏠</div>
-          <h4>Shelter & Housing</h4>
-          <p>Emergency shelters, transitional housing, and permanent housing assistance.</p>
+      <h3>Data & Resources</h3>
+      <div class="info-grid">
+        <div class="info-section">
+          <h4>Survey Data</h4>
+          <ul>
+            <li><a href="#data-collection">Data Collection Methodology</a></li>
+            <li><a href="#survey-instruments">Survey Instruments</a></li>
+            <li><a href="#data-files">Data Files & Downloads</a></li>
+            <li><a href="#publications">Publications & Reports</a></li>
+          </ul>
         </div>
-        <div class="service-item">
-          <div class="service-icon">🧠</div>
-          <h4>Mental Health</h4>
-          <p>Counseling, therapy, medication management, and support groups.</p>
+        <div class="info-section">
+          <h4>Service Categories</h4>
+          <ul>
+            <li>Shelter & Housing Services</li>
+            <li>Mental Health Treatment</li>
+            <li>Substance Use Treatment</li>
+            <li>Legal Aid Services</li>
+            <li>Family Support Services</li>
+            <li>Accessibility Services</li>
+          </ul>
         </div>
-        <div class="service-item">
-          <div class="service-icon">💊</div>
-          <h4>Substance Use</h4>
-          <p>Detox, rehabilitation, recovery programs, and peer support.</p>
+        <div class="info-section">
+          <h4>Technical Resources</h4>
+          <ul>
+            <li><a href="#api-documentation">API Documentation</a></li>
+            <li><a href="#data-dictionary">Data Dictionary</a></li>
+            <li><a href="#methodology">Survey Methodology</a></li>
+            <li><a href="#contact">Contact Information</a></li>
+          </ul>
         </div>
-        <div class="service-item">
-          <div class="service-icon">⚖️</div>
-          <h4>Legal Aid</h4>
-          <p>Legal assistance, advocacy, and protection services.</p>
-        </div>
-        <div class="service-item">
-          <div class="service-icon">👨‍👩‍👧‍👦</div>
-          <h4>Family Support</h4>
-          <p>Services for families, youth, veterans, and specific client groups.</p>
-        </div>
-        <div class="service-item">
-          <div class="service-icon">♿</div>
-          <h4>Accessibility</h4>
-          <p>Wheelchair accessible, pet-friendly, walk-in services, and more.</p>
+        <div class="info-section">
+          <h4>Related Links</h4>
+          <ul>
+            <li><a href="https://www.samhsa.gov" target="_blank">SAMHSA Website</a></li>
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#terms">Terms of Use</a></li>
+            <li><a href="#accessibility">Accessibility Statement</a></li>
+          </ul>
         </div>
       </div>
-      <h3>In an emergency</h3>
-      <p>If you or someone is in immediate danger call 911 or your local crisis line.</p>
+      <div class="emergency-notice">
+        <h4>Emergency Services</h4>
+        <p>If you or someone you know is in immediate danger, call 911 or your local emergency services. For mental health crises, call the 988 Suicide & Crisis Lifeline.</p>
+      </div>
     </section>
   </main>
 

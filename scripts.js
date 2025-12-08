@@ -345,7 +345,7 @@ async function setLanguage(lang){
 document.addEventListener('DOMContentLoaded', async ()=>{
   // Set up search input
   const q = document.getElementById('query');
-  q.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ doSearch(true); e.preventDefault(); } });
+  q.addEventListener('keydown', async (e)=>{ if(e.key==='Enter'){ await doSearch(true); e.preventDefault(); } });
   
   // Load low-bandwidth preference
   if(localStorage.getItem('lowBandwidth')==='1') document.body.classList.add('low-bandwidth');
