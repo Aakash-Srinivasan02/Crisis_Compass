@@ -1,352 +1,352 @@
 {
   "summary": {
     "total_tests": 57,
-    "passed": 55,
-    "failed": 2,
-    "success_rate": 96.49122807017544
+    "passed": 57,
+    "failed": 0,
+    "success_rate": 100.0
   },
   "detailed_results": [
     {
       "test": "Server Connectivity",
       "status": "PASS",
       "details": "Local server responding",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - title",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - header",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - search form",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - hotlines",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - language selector",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - privacy link",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - javascript",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Main Page - css",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - Valid JSON",
       "status": "PASS",
       "details": "Loaded 12 resources",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - id field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - name field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - type field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - services field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - city field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - state field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - phone field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - address field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - lat field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - lon field",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - Geographic Diversity",
       "status": "PASS",
       "details": "States: 5",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Resources Data - Service Diversity",
       "status": "PASS",
       "details": "Types: 4",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - responsive design",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - color variables",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - button styles",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - card styles",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - modal styles",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "CSS - accessibility",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - loadResources function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - doSearch function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - geolocateAndSearch function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - showMapView function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - showListView function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - openDetail function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - setLanguage function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - toggleLowBandwidth function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - quickExit function",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - Leaflet map library",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - LocalStorage usage",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - Fetch API",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "JavaScript - Geolocation API",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:29:59"
     },
     {
       "test": "Privacy Page - privacy content",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Privacy Page - proper HTML structure",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Privacy Page - title",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "i18n - en translation file",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "i18n - es translation file",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "i18n - fr translation file",
-      "status": "FAIL",
-      "details": "HTTP 404",
-      "timestamp": "2025-12-15 06:52:57"
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "i18n - ar translation file",
-      "status": "FAIL",
-      "details": "HTTP 404",
-      "timestamp": "2025-12-15 06:52:57"
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Emergency Hotline - 988 Suicide Lifeline",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Emergency Hotline - Domestic Violence Hotline",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Emergency Hotline - Emergency Services",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - search input",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - service filter",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - state filter",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - search button",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - geolocation button",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     },
     {
       "test": "Search Functionality - view toggle buttons",
       "status": "PASS",
       "details": "",
-      "timestamp": "2025-12-15 06:52:57"
+      "timestamp": "2026-01-03 11:30:00"
     }
   ]
 }
