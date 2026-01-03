@@ -1,0 +1,24 @@
+{
+  "hotline_main": "Appelez le 988 — Ligne de vie pour le suicide et les crises",
+  "hotline_dv": "Appelez le 1-800-799-7233 — Ligne contre la violence domestique",
+  "low_data": "Mode données réduites",
+  "exit": "Quitter",
+  "privacy": "Confidentialité",
+  "find_help": "Trouver de l'aide maintenant",
+  "search_label": "Rechercher par ville, code postal ou service",
+  "search_placeholder": "Ville, code postal ou service (ex: refuge, désintoxication)",
+  "find_cta": "Trouver de l'aide locale vérifiée",
+  "list_view": "Vue en liste",
+  "map_view": "Vue carte",
+  "client_type": "Type de client :",
+  "families": "Familles",
+  "women": "Femmes",
+  "men": "Hommes",
+  "youth": "Jeunes",
+  "veterans": "Vétérans",
+  "requirements": "Exigences :",
+  "pet_friendly": "Animaux acceptés",
+  "walkins": "Sans rendez-vous",
+  "wheelchair": "Accès fauteuil roulant"
+}
+

@@ -3,6 +3,144 @@
 let resourcesCache = null;
 let mapLoaded = false;
 
+// Favorites state
+window.__favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+window.__showFavoritesOnly = false;
+
+// Helper functions for badge styling
+function getCostClass(cost){
+  if(!cost) return '';
+  const c = cost.toLowerCase();
+  if(c.includes('free')) return 'cost-free';
+  if(c.includes('sliding') || c.includes('scale')) return 'cost-sliding';
+  return 'cost-paid';
+}
+
+function getHoursClass(hours){
+  if(!hours) return '';
+  const h = hours.toLowerCase();
+  if(h.includes('24') || h.includes('always') || h.includes('24/7')) return 'hours-24';
+  if(h.includes('call') || h.includes('appointment')) return 'hours-call';
+  return 'hours-limited';
+}
+
+// Favorites functionality
+function toggleFavorite(id){
+  const idx = window.__favorites.indexOf(id);
+  if(idx === -1){
+    window.__favorites.push(id);
+  } else {
+    window.__favorites.splice(idx, 1);
+  }
+  localStorage.setItem('favorites', JSON.stringify(window.__favorites));
+  renderResults(getCurrentResults());
+}
+
+function toggleFavoriteView(){
+  window.__showFavoritesOnly = !window.__showFavoritesOnly;
+  renderResults(getCurrentResults());
+}
+
+async function getCurrentResults(){
+  // Re-run the current search to get filtered results
+  const q = document.getElementById('query').value.trim();
+  const filter = document.getElementById('filter').value;
+  const stateFilter = document.getElementById('stateFilter').value;
+  const all = await loadResources();
+  let results = all.filter(r=>matchText(r,q));
+  if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
+  if(stateFilter) results = results.filter(r=>r.state===stateFilter);
+  results = results.filter(r=>passesRefinements(r));
+  
+  // Filter to favorites only if enabled
+  if(window.__showFavoritesOnly){
+    results = results.filter(r=>window.__favorites.includes(r.id));
+  }
+  
+  if(window.__userLocation){
+    results = results.map(r=>{
+      const d = distanceMiles(window.__userLocation.lat, window.__userLocation.lon, r.lat, r.lon);
+      return {r:r, d:d};
+    })
+      .filter(x=>x.d===null || x.d<=50)
+      .sort((a,b)=>{
+        if(a.d===null) return 1;
+        if(b.d===null) return -1;
+        return a.d-b.d;
+      })
+      .map(x=>x.r);
+  }
+  return results;
+}
+
+// Clear all filters
+function clearAllFilters(){
+  document.getElementById('query').value = '';
+  document.getElementById('filter').value = '';
+  document.getElementById('stateFilter').value = '';
+  document.querySelectorAll('input[name="client"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('input[name="req"]').forEach(cb => cb.checked = false);
+  window.__showFavoritesOnly = false;
+  doSearch(false);
+}
+
+// Pagination state
+let __currentPage = 1;
+const __itemsPerPage = 10;
+
+function renderPagination(container, paginationInfo){
+  const totalPages = paginationInfo.totalPages || Math.ceil(paginationInfo.total / __itemsPerPage);
+  const currentPage = paginationInfo.currentPage || __currentPage;
+  
+  if(totalPages <= 1) return;
+  
+  const pagination = document.createElement('div');
+  pagination.className = 'pagination';
+  
+  let html = `
+    <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+  `;
+  
+  // Simple page numbers (show first, last, and around current)
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+  
+  if(endPage - startPage < maxVisiblePages - 1){
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+  
+  if(startPage > 1){
+    html += `<button onclick="goToPage(1)">1</button>`;
+    if(startPage > 2) html += `<span class="page-info">...</span>`;
+  }
+  
+  for(let i = startPage; i <= endPage; i++){
+    if(i === currentPage){
+      html += `<button class="active" onclick="goToPage(${i})">${i}</button>`;
+    } else {
+      html += `<button onclick="goToPage(${i})">${i}</button>`;
+    }
+  }
+  
+  if(endPage < totalPages){
+    if(endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
+    html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+  }
+  
+  html += `
+    <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+  `;
+  
+  pagination.innerHTML = html;
+  container.appendChild(pagination);
+}
+
+function goToPage(page){
+  __currentPage = page;
+  renderResults(getCurrentResults());
+}
+
 async function loadResources(){
   if(resourcesCache) return resourcesCache;
   try{
