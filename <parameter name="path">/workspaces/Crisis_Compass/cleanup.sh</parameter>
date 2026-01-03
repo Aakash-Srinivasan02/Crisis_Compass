@@ -1,0 +1,77 @@
+<parameter name="content">#!/bin/bash
+# Crisis Compass Cleanup Script
+# Removes unnecessary files for GitHub Pages deployment
+
+echo "🧹 Crisis Compass Cleanup Script"
+echo "=================================="
+
+# Files to remove (documentation)
+FILES_TO_REMOVE=(
+    "FEATURE_TEST_PLAN.md"
+    "GET_ALL_50_STATES_QUICK_START.md"
+    "IMPROVEMENTS_PLAN.md"
+    "LOCATION_FEATURES_SUMMARY.md"
+    "LOCATION_FEATURES.md"
+    "LOCATION_QUICK_REFERENCE.md"
+    "NATIONAL_DATA_INTEGRATION.md"
+    "NATIONAL_EXPANSION_ROADMAP.md"
+    "WEBSITE_TEST_PLAN.md"
+    "TEST_REPORT.md"
+    "TEST_RESULTS.json"
+    "TODO.md"
+    "cleanup.sh"
+)
+
+# Development files
+DEV_FILES=(
+    ".eslintrc.js"
+    "package.json"
+    "package-lock.json"
+    "test_all_features.py"
+    "test-api.sh"
+    "test-functions.js"
+)
+
+# Directories to remove
+DIRS_TO_REMOVE=(
+    ".vscode"
+    "node_modules"
+    "backend"
+    "docs"
+)
+
+echo ""
+echo "📄 Removing documentation files..."
+for file in "${FILES_TO_REMOVE[@]}"; do
+    if [ -f "$file" ]; then
+        rm -f "$file"
+        echo "  ✅ Removed: $file"
+    fi
+done
+
+echo ""
+echo "🔧 Removing development files..."
+for file in "${DEV_FILES[@]}"; do
+    if [ -f "$file" ]; then
+        rm -f "$file"
+        echo "  ✅ Removed: $file"
+    fi
+done
+
+echo ""
+echo "📁 Removing directories..."
+for dir in "${DIRS_TO_REMOVE[@]}"; do
+    if [ -d "$dir" ]; then
+        rm -rf "$dir"
+        echo "  ✅ Removed: $dir/"
+    fi
+done
+
+echo ""
+echo "✅ Cleanup complete!"
+echo ""
+echo "📦 Remaining files:"
+ls -la
+echo ""
+echo "🌐 Ready for GitHub Pages deployment!"
+</parameter>

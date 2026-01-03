@@ -41,28 +41,143 @@ function passesRefinements(item){
   return true;
 }
 
-function renderResults(list){
+
+function renderResults(list, paginationInfo = null){
   const container = document.getElementById('results');
   if(!container) return;
   console.log('renderResults called with', list.length, 'items');
+  
   container.innerHTML = '';
+  
+  // Add search results summary
+  const totalResults = paginationInfo?.total || list.length;
+  const currentPage = paginationInfo?.currentPage || 1;
+  const totalPages = paginationInfo?.totalPages || 1;
+  
+  const summary = document.createElement('div');
+  summary.className = 'results-summary';
+  summary.innerHTML = `
+    <div class="summary-content">
+      <h3 class="results-count">${totalResults} ${totalResults === 1 ? 'service' : 'services'} found</h3>
+      ${paginationInfo ? `<div class="pagination-info">Page ${currentPage} of ${totalPages}</div>` : ''}
+      <div class="view-controls">
+        <button onclick="toggleFavoriteView()" class="small-btn ${window.__showFavoritesOnly ? 'active' : ''}" id="favoritesBtn">
+          ${window.__showFavoritesOnly ? 'Showing Favorites' : 'Show Favorites'}
+        </button>
+      </div>
+    </div>
+  `;
+  container.appendChild(summary);
+  
   if(list.length===0){
-    container.innerHTML = '<p class="hint">No matches found. Try another city, ZIP, or service.</p>';
+    const noResults = document.createElement('div');
+    noResults.className = 'no-results';
+    noResults.innerHTML = `
+      <div class="no-results-content">
+        <div class="no-results-icon">🔍</div>
+        <h4>No services found</h4>
+        <p>Try adjusting your search criteria:</p>
+        <ul>
+          <li>Use a different city or ZIP code</li>
+          <li>Select "All services" instead of a specific type</li>
+          <li>Clear some filters</li>
+          <li>Try searching for broader terms</li>
+        </ul>
+        <button onclick="clearAllFilters()" class="cta">Clear All Filters</button>
+      </div>
+    `;
+    container.appendChild(noResults);
     return;
   }
-  list.forEach(it=>{
+  
+  // Add loading state for large result sets
+  if(list.length > 20) {
+    const loading = document.createElement('div');
+    loading.className = 'loading-indicator';
+    loading.innerHTML = '<div class="spinner"></div> Loading services...';
+    container.appendChild(loading);
+  }
+  
+  // Render each service card with enhanced information
+  list.forEach((it, index) => {
     const el = document.createElement('div');
     el.className = 'card';
+    
+    // Enhanced distance calculation
     const distance = (window.__userLocation && it.lat && it.lon) ? 
-      ' • <strong>'+distanceMiles(window.__userLocation.lat, window.__userLocation.lon, it.lat, it.lon).toFixed(1)+' miles</strong>' : '';
-    el.innerHTML = `<h4><a href="#" onclick="openDetail('${escapeHtml(it.id)}');return false;">${escapeHtml(it.name)}</a>${it.verified?'<span class="verified">Verified</span>':''}</h4>
-      <div class="meta">${escapeHtml(it.type)} — ${escapeHtml(it.city)} ${it.zip ? '• '+escapeHtml(it.zip):''}${distance}${it.capacityStatus?'<span class="capacity">'+escapeHtml(it.capacityStatus)+'</span>':''}</div>
-      <div>${escapeHtml(it.address || '')}</div>
-      <div>${it.phone?'<strong>Phone:</strong> <a href="tel:'+escapeHtml(it.phone)+'">'+escapeHtml(it.phone)+'</a>':''}</div>
-      ${it.website?'<div><a href="'+escapeHtml(it.website)+'" target="_blank" rel="noopener">Website</a></div>':''}
+      '<span class="distance-badge">' + distanceMiles(window.__userLocation.lat, window.__userLocation.lon, it.lat, it.lon).toFixed(1) + ' miles away</span>' : '';
+    
+    // Enhanced capacity status
+    let capacityClass = '';
+    if(it.capacityStatus) {
+      const status = it.capacityStatus.toLowerCase();
+      if(status.includes('limited') || status.includes('full')) {
+        capacityClass = 'capacity-limited';
+      } else if(status.includes('available') || status.includes('open')) {
+        capacityClass = 'capacity-available';
+      }
+    }
+    
+    // Enhanced cost information
+    const costBadge = it.cost ? `<span class="cost-badge ${getCostClass(it.cost)}">${escapeHtml(it.cost)}</span>` : '';
+    
+    // Operating hours indicator
+    const hoursBadge = it.hours ? `<span class="hours-badge ${getHoursClass(it.hours)}">${escapeHtml(it.hours)}</span>` : '';
+    
+    // Favorites functionality
+    const isFavorite = window.__favorites && window.__favorites.includes(it.id);
+    const favoriteBtn = `<button class="favorite-btn ${isFavorite ? 'favorited' : ''}" onclick="toggleFavorite('${escapeHtml(it.id)}')" aria-label="${isFavorite ? 'Remove from' : 'Add to'} favorites">
+      ${isFavorite ? '★' : '☆'}
+    </button>`;
+    
+    el.innerHTML = `
+      <div class="card-header">
+        <h4>
+          <a href="#" onclick="openDetail('${escapeHtml(it.id)}');return false;" class="service-name">${escapeHtml(it.name)}</a>
+          ${it.verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
+        </h4>
+        ${favoriteBtn}
+      </div>
+      <div class="meta">
+        <span class="service-type">${escapeHtml(it.type)}</span>
+        <span class="location">${escapeHtml(it.city)}${it.zip ? ', ' + escapeHtml(it.zip) : ''}</span>
+        ${distance}
+        ${capacityClass ? `<span class="capacity ${capacityClass}">${escapeHtml(it.capacityStatus)}</span>` : ''}
+      </div>
+      <div class="address">${escapeHtml(it.address || '')}</div>
+      <div class="contact-info">
+        ${it.phone ? `<div class="phone"><strong>Phone:</strong> <a href="tel:${escapeHtml(it.phone)}" class="phone-link">${escapeHtml(it.phone)}</a></div>` : ''}
+        ${it.website ? `<div class="website"><a href="${escapeHtml(it.website)}" target="_blank" rel="noopener" class="website-link">Visit Website</a></div>` : ''}
+      </div>
+      <div class="service-details">
+        ${costBadge}
+        ${hoursBadge}
+        ${it.intake ? `<div class="intake-info"><strong>Intake:</strong> ${escapeHtml(it.intake)}</div>` : ''}
+        ${it.eligibility ? `<div class="eligibility-info"><strong>Eligibility:</strong> ${escapeHtml(it.eligibility)}</div>` : ''}
+      </div>
+      <div class="card-actions">
+        <button onclick="openDetail('${escapeHtml(it.id)}')" class="small-btn">View Details</button>
+        ${it.phone ? `<button onclick="window.location.href='tel:${escapeHtml(it.phone)}'" class="small-btn cta">Call Now</button>` : ''}
+        ${it.lat && it.lon ? `<button onclick="getDirections(${it.lat}, ${it.lon}, '${escapeHtml(it.name)}')" class="small-btn">Directions</button>` : ''}
+      </div>
     `;
+    
+    // Add fade-in animation
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
     container.appendChild(el);
-  })
+    
+    setTimeout(() => {
+      el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, index * 50);
+  });
+  
+  // Add pagination if needed
+  if(paginationInfo && totalPages > 1) {
+    renderPagination(container, paginationInfo);
+  }
 }
 
 async function doSearch(userTriggered){

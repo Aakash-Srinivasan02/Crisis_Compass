@@ -1,0 +1,35 @@
+<parameter name="content"># Crisis Compass
+
+A centralized directory of local, verified services for housing, substance use, and mental health support.
+
+## Quick Start
+
+Open `index.html` in a browser, or serve locally:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open http://localhost:8000
+
+## Features
+
+- Search by city, ZIP, or service type
+- Filter by state (all 50 US states)
+- Client type and accessibility filters
+- Geolocation-based search
+- Interactive map view
+- Multi-language support (English, Spanish, French, Arabic)
+- Quick exit for safety
+- Low-data mode
+
+## Data
+
+Services are stored in `resources.json`. Replace with your verified local dataset.
+
+## Deployment
+
+This project is configured for GitHub Pages. Push to the `main` branch and it will be available at:
+
+https://aakash-srinivasan02.github.io/Crisis_Compass/
+</parameter>

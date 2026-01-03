@@ -1,0 +1,67 @@
+<parameter name="content"># Crisis Compass Cleanup
+
+## What to Remove for GitHub Pages
+
+### Essential Files (KEEP ✅)
+- `index.html` - Main page
+- `styles.css` - Styles
+- `scripts.js` - JavaScript
+- `resources.json` - Service data
+- `privacy.html` - Privacy policy
+- `i18n/` - Translations
+- `README.md` - Documentation
+- `.git/` - Git repository
+- `.gitignore` - Git ignore rules
+
+### Remove These Files
+```bash
+# Development files
+rm .eslintrc.js
+rm package.json
+rm package-lock.json
+
+# Test files
+rm test_all_features.py
+rm test-api.sh
+rm test-functions.js
+
+# Documentation (keep only README.md)
+rm FEATURE_TEST_PLAN.md
+rm GET_ALL_50_STATES_QUICK_START.md
+rm IMPROVEMENTS_PLAN.md
+rm LOCATION_FEATURES_SUMMARY.md
+rm LOCATION_FEATURES.md
+rm LOCATION_QUICK_REFERENCE.md
+rm NATIONAL_DATA_INTEGRATION.md
+rm NATIONAL_EXPANSION_ROADMAP.md
+rm WEBSITE_TEST_PLAN.md
+rm TEST_REPORT.md
+rm TEST_RESULTS.json
+rm TODO.md
+rm cleanup.sh
+rm CLEANUP.md
+
+# Directories
+rm -rf .vscode/
+rm -rf node_modules/
+rm -rf backend/
+rm -rf docs/
+```
+
+## After Cleanup
+```
+Crisis_Compass/
+├── .git/
+├── .gitignore
+├── i18n/
+│   ├── en.json
+│   ├── es.json
+│   └── fr.json (optional)
+├── index.html
+├── styles.css
+├── scripts.js
+├── resources.json
+├── privacy.html
+└── README.md
+```
+</parameter>
