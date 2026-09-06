@@ -19,6 +19,7 @@ for (const south of [24, 30, 36, 42]) {
   }
 }
 OSM_BBOXES.push('18,-161,23,-154', '51,-180,72,-130');
+const SAMHSA_CSV_PATH = process.env.SAMHSA_CSV_PATH || path.join(__dirname, '..', '.github', 'workflows', 'FindTreament_Facility_listing_2026_09_06_155248.csv');
 
 const PUBLIC_RESOURCE_CATALOG = [
   {
@@ -210,6 +211,94 @@ const PUBLIC_RESOURCE_CATALOG = [
   }
 ];
 
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let value = '';
+  let quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+    if (char === '"' && quoted && next === '"') {
+      value += '"';
+      index += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === ',' && !quoted) {
+      row.push(value.trim());
+      value = '';
+    } else if ((char === '\n' || char === '\r') && !quoted) {
+      if (char === '\r' && next === '\n') index += 1;
+      row.push(value.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      value = '';
+    } else {
+      value += char;
+    }
+  }
+  if (value || row.length) {
+    row.push(value.trim());
+    if (row.some(Boolean)) rows.push(row);
+  }
+  if (!rows.length) return [];
+  const headers = rows.shift();
+  return rows.map(columns => headers.reduce((record, header, index) => {
+    record[header] = columns[index] || '';
+    return record;
+  }, {}));
+}
+
+function csvFlag(row, key) {
+  return row[key] === '1' || row[key] === 'Y' || row[key] === 'true';
+}
+
+function normalizeCsvFacility(row, index) {
+  const name = [row.name1, row.name2].filter(Boolean).join(' - ').trim();
+  const address = [row.street1, row.street2].filter(Boolean).join(', ');
+  if (!name || (!row.phone && !row.website && !address)) return null;
+  const type = row.type_facility === 'MH' ? 'mental-health' : row.type_facility === 'SU' ? 'substance' : 'general-support';
+  const services = [];
+  if (csvFlag(row, 'dt')) services.push('detox');
+  if (csvFlag(row, 'mm')) services.push('medication-management');
+  if (csvFlag(row, 'op')) services.push('outpatient');
+  if (csvFlag(row, 'res')) services.push('residential');
+  if (csvFlag(row, 'tele')) services.push('telehealth');
+  if (csvFlag(row, 'sa') || type === 'substance') services.push('substance-use-treatment');
+  if (type === 'mental-health') services.push('mental-health-treatment');
+  const clientTypes = [];
+  if (csvFlag(row, 'adol')) clientTypes.push('youth');
+  if (csvFlag(row, 'fem')) clientTypes.push('women');
+  if (csvFlag(row, 'male')) clientTypes.push('men');
+  if (csvFlag(row, 'vet')) clientTypes.push('veterans');
+  if (!clientTypes.length) clientTypes.push('adults');
+  return normalizePublicResource({
+    id: `samhsa-${index + 1}`,
+    name,
+    type,
+    services: [...new Set(services.length ? services : ['referrals'])],
+    address,
+    city: row.city,
+    state: row.state,
+    zip: row.zip,
+    lat: Number(row.latitude) || null,
+    lon: Number(row.longitude) || null,
+    phone: row.phone || null,
+    website: row.website || null,
+    hours: 'Contact provider for hours',
+    intake: 'Call ahead to confirm services and availability',
+    eligibility: 'Varies by provider',
+    cost: 'Varies by provider',
+    capacityStatus: 'Call first',
+    clientTypes,
+    wheelchair: true,
+    source: 'samhsa-csv',
+    sourceId: row.frid || `samhsa-${index + 1}`,
+    sourceUrl: 'https://findtreatment.gov',
+    verified: true
+  });
+}
+
 function normalizePublicResource(item) {
   const timestamp = now();
   return {
@@ -233,7 +322,9 @@ function normalizePublicResource(item) {
 function deduplicate(resources) {
   const seen = new Set();
   return resources.filter(resource => {
-    const key = `${resource.name}-${resource.city}`.toLowerCase().trim();
+    const sourceKey = resource.sourceId ? `${resource.source || 'unknown'}-${resource.sourceId}` : '';
+    const locationKey = `${resource.name}-${resource.address}-${resource.city}-${resource.zip}`.toLowerCase().trim();
+    const key = sourceKey || locationKey;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -243,6 +334,13 @@ function deduplicate(resources) {
 async function fetchPublicCatalog() {
   console.log('Fetching official public resource directories...');
   return PUBLIC_RESOURCE_CATALOG.map(normalizePublicResource);
+}
+
+async function fetchCsvFacilities() {
+  if (!fs.existsSync(SAMHSA_CSV_PATH)) return [];
+  console.log(`Importing SAMHSA facility CSV: ${SAMHSA_CSV_PATH}`);
+  const records = parseCsv(fs.readFileSync(SAMHSA_CSV_PATH, 'utf8'));
+  return records.map(normalizeCsvFacility).filter(Boolean);
 }
 
 async function fetchConfiguredFeed() {
@@ -320,6 +418,7 @@ async function fetchOpenStreetMapResources() {
 async function consolidate() {
   const resources = deduplicate([
     ...(await fetchPublicCatalog()),
+    ...(await fetchCsvFacilities()),
     ...(await fetchConfiguredFeed()),
     ...(await fetchOpenStreetMapResources())
   ]).sort((a, b) => {
@@ -339,4 +438,4 @@ async function consolidate() {
 
 if (require.main === module) consolidate().catch(error => { console.error('ETL failed:', error.message); process.exit(1); });
 
-module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, normalizeOsmResource, deduplicate, fetchPublicCatalog, fetchConfiguredFeed, fetchOpenStreetMapResources, consolidate };
+module.exports = { PUBLIC_RESOURCE_CATALOG, parseCsv, normalizeCsvFacility, normalizePublicResource, normalizeOsmResource, deduplicate, fetchPublicCatalog, fetchCsvFacilities, fetchConfiguredFeed, fetchOpenStreetMapResources, consolidate };

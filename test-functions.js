@@ -167,6 +167,9 @@ test('ETL: includes official online crisis-resource directories', () => {
 
   assertTruthy(hasOfficialSource, 'Catalog includes official public resource domains and hotlines');
   assertFalsy(catalog.some(item => String(item.phone || '').includes('555')), 'Catalog has no placeholder phone numbers');
+  const resources = JSON.parse(fs.readFileSync(path.join(__dirname, 'resources.json'), 'utf-8'));
+  assertTruthy(resources.length >= 1000, 'Catalog contains at least 1,000 resources');
+  assertTruthy(resources.some(item => item.source === 'samhsa-csv'), 'Catalog includes imported SAMHSA facilities');
 });
 
 // Test: API endpoint responses (mock)
@@ -504,7 +507,8 @@ test('geolocateAndSearch: filters resources within 50 miles', () => {
     .filter(x => x.d === null || x.d <= 50);
   assertTruthy(withinRange.length > 0, 'Some resources within 50 miles');
   assertTruthy(withinRange.length < mappableResources.length, 'Not all resources within 50 miles');
-  assertTruthy(resources.every(resource => resource.lat === null && resource.lon === null), 'Directory records disclose missing map coordinates');
+  assertTruthy(resources.some(resource => resource.lat === null && resource.lon === null), 'Directory records disclose missing map coordinates');
+  assertTruthy(resources.some(resource => resource.lat !== null && resource.lon !== null), 'Imported facilities include map coordinates');
 });
 
 test('geolocateAndSearch: sorts results by distance (closest first)', () => {
