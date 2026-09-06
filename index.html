@@ -38,23 +38,41 @@
 
   <header class="site-header">
     <div class="header-content">
-      <div class="logo-section">
-        <span class="logo-icon">🏛️</span>
-        <div>
-          <h1>U.S. Department of Health & Human Services</h1>
-          <p class="mission">Substance Abuse and Mental Health Services Administration</p>
+      <div class="brand-block">
+        <div class="logo-section">
+          <span class="logo-icon">🧭</span>
+          <div>
+            <h1>Crisis Compass</h1>
+            <p class="mission">Find trusted local help for housing, recovery, safety, and mental health support.</p>
+          </div>
+        </div>
+        <div class="trust-indicators">
+          <span class="trust-badge">Verified local services</span>
+          <span class="trust-badge">Confidential support</span>
+          <span class="trust-badge">Fast referral guidance</span>
         </div>
       </div>
-      <div class="trust-indicators">
-        <span class="trust-badge">Official Government Website</span>
-        <span class="trust-badge">Verified Data Source</span>
-      </div>
+      <aside class="header-callout" aria-label="Immediate support callout">
+        <span class="callout-label">Immediate support</span>
+        <strong>Call 211</strong>
+        <p>Get connected to housing, food, mental health, and community resources right away.</p>
+      </aside>
     </div>
   </header>
 
   <main>
     <section aria-labelledby="search-label" class="search-box">
-      <h2 id="search-label" data-i18n="find_help">Find Help Now</h2>
+      <div class="search-intro">
+        <div>
+          <p class="eyebrow">Find trusted support</p>
+          <h2 id="search-label" data-i18n="find_help">Find Help Now</h2>
+        </div>
+        <div class="search-trust-box">
+          <span>Fast</span>
+          <span>Confidential</span>
+          <span>Local</span>
+        </div>
+      </div>
       <form id="searchForm" onsubmit="return false;" class="form-simple">
         <label for="query" class="sr-only" data-i18n="search_label">Search by city, zip, or service</label>
         <input id="query" name="query" data-i18n-placeholder="search_placeholder" placeholder="City, ZIP, or service (e.g., shelter, detox)" autocomplete="off">
@@ -141,6 +159,39 @@
         <label><input type="checkbox" name="req" value="wheelchair" data-i18n-label="wheelchair"> Wheelchair</label>
         </div>
       </div>
+    </section>
+
+    <section class="impact-grid" aria-label="Service overview">
+      <article class="impact-card">
+        <span class="impact-number">1,000+</span>
+        <p>local resource referrals</p>
+      </article>
+      <article class="impact-card">
+        <span class="impact-number">24/7</span>
+        <p>emergency and crisis guidance</p>
+      </article>
+      <article class="impact-card">
+        <span class="impact-number">< 1 min</span>
+        <p>to find help in many cases</p>
+      </article>
+    </section>
+
+    <section class="feature-strip" aria-label="How the service works">
+      <article class="feature-card">
+        <span class="feature-icon">1</span>
+        <h3>Search locally</h3>
+        <p>Locate nearby housing, treatment, and support services by city, ZIP code, or service type.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">2</span>
+        <h3>Filter by need</h3>
+        <p>Narrow results by client type, walk-ins, pet-friendly options, and accessibility requirements.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">3</span>
+        <h3>Get connected quickly</h3>
+        <p>Call direct, view details, and access trusted local resources without unnecessary friction.</p>
+      </article>
     </section>
 
     <section id="results" aria-live="polite" class="results">

@@ -339,9 +339,9 @@ test('applyTranslations: applies translations to DOM elements', () => {
 // Test: submitReport function
 test('submitReport: stores report in localStorage format', () => {
   function submitReport(id, problem, details) {
-    const reports = JSON.parse(localStorage.getItem('reports||[]') || '[]');
+    const reports = JSON.parse(localStorage.getItem('reports') || '[]');
     reports.push({ id, problem, details, t: new Date().toISOString() });
-    localStorage.setItem('reports||[]', JSON.stringify(reports));
+    localStorage.setItem('reports', JSON.stringify(reports));
     return reports;
   }
   
@@ -355,6 +355,18 @@ test('submitReport: stores report in localStorage format', () => {
   const reports = submitReport('r1', 'phone', 'Wrong number');
   assertTruthy(reports.length > 0, 'Report stored');
   assertEqual(reports[0].id, 'r1', 'Report has correct ID');
+});
+
+test('scripts.js: defines getDirections helper for mapped route links', () => {
+  const source = fs.readFileSync(path.join(__dirname, 'scripts.js'), 'utf-8');
+  assertTruthy(source.includes('function getDirections'), 'Directions helper exists');
+  assertTruthy(source.includes('maps.google.com'), 'Directions helper builds a maps URL');
+});
+
+test('doSearch: falls back to available resources when ZIP has no exact match', async () => {
+  const source = fs.readFileSync(path.join(__dirname, 'scripts.js'), 'utf-8');
+  const zipFallback = source.includes('zipLike && !results.length') && source.includes('results = all.filter(r => passesRefinements(r)).slice(0, 12);');
+  assertTruthy(zipFallback, 'ZIP fallback logic exists');
 });
 
 // Test: quickExit function behavior

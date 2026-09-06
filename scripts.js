@@ -41,6 +41,73 @@ function passesRefinements(item){
   return true;
 }
 
+function readFavorites(){
+  try {
+    const stored = JSON.parse(localStorage.getItem('favorites') || '[]');
+    return Array.isArray(stored) ? stored : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFavorites(list){
+  localStorage.setItem('favorites', JSON.stringify(list));
+  window.__favorites = list;
+}
+
+function toggleFavorite(id){
+  const favorites = readFavorites();
+  const idx = favorites.indexOf(id);
+  if(idx >= 0) {
+    favorites.splice(idx, 1);
+  } else {
+    favorites.push(id);
+  }
+  saveFavorites(favorites);
+  if(window.__showFavoritesOnly){
+    doSearch(false);
+  } else {
+    renderResults((resourcesCache || []).filter(item => !window.__showFavoritesOnly || favorites.includes(item.id)));
+  }
+}
+
+function toggleFavoriteView(){
+  window.__showFavoritesOnly = !window.__showFavoritesOnly;
+  localStorage.setItem('favoritesView', window.__showFavoritesOnly ? '1' : '0');
+  doSearch(false);
+}
+
+function clearAllFilters(){
+  document.getElementById('query').value = '';
+  document.getElementById('filter').value = '';
+  document.getElementById('stateFilter').value = '';
+  document.querySelectorAll('input[name="client"]').forEach(input => input.checked = false);
+  document.querySelectorAll('input[name="req"]').forEach(input => input.checked = false);
+  doSearch(false);
+}
+
+function getCostClass(cost){
+  if(!cost) return '';
+  const text = String(cost).toLowerCase();
+  if(text.includes('free')) return 'cost-free';
+  if(text.includes('sliding') || text.includes('scale')) return 'cost-sliding';
+  return 'cost-standard';
+}
+
+function getHoursClass(hours){
+  if(!hours) return '';
+  const text = String(hours).toLowerCase();
+  if(text.includes('24') || text.includes('open')) return 'hours-24';
+  if(text.includes('call') || text.includes('by appointment')) return 'hours-call';
+  return 'hours-regular';
+}
+
+function getDirections(lat, lon, name){
+  if(!lat || !lon) return;
+  const destination = encodeURIComponent(String(name || 'Service provider'));
+  const url = `https://maps.google.com/?q=${lat},${lon}&label=${destination}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
 
 function renderResults(list, paginationInfo = null){
   const container = document.getElementById('results');
@@ -189,6 +256,21 @@ async function doSearch(userTriggered){
   if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
   if(stateFilter) results = results.filter(r=>r.state===stateFilter);
   results = results.filter(r=>passesRefinements(r));
+
+  const zipLike = /^\d{3,5}$/.test(q);
+  if(zipLike && !results.length){
+    const zipPrefix = q.replace(/\D/g, '').slice(0, 3);
+    const prefixMatches = all.filter(r => {
+      const zipDigits = String(r.zip || '').replace(/\D/g, '');
+      return zipDigits.startsWith(zipPrefix) || zipDigits.includes(q.replace(/\D/g, ''));
+    });
+    results = prefixMatches.filter(r => passesRefinements(r));
+  }
+
+  if(zipLike && !results.length){
+    results = all.filter(r => passesRefinements(r)).slice(0, 12);
+  }
+
   // if a geolocation search was performed, userLat/Lon may be set
   if(window.__userLocation){
     results = results.map(r=>{
@@ -401,9 +483,9 @@ function submitReport(e,id){
   e.preventDefault();
   const problem = document.getElementById('problem').value;
   const details = document.getElementById('details').value;
-  const reports = JSON.parse(localStorage.getItem('reports||[]')||'[]');
+  const reports = JSON.parse(localStorage.getItem('reports') || '[]');
   reports.push({id,problem,details,t: new Date().toISOString()});
-  localStorage.setItem('reports||[]', JSON.stringify(reports));
+  localStorage.setItem('reports', JSON.stringify(reports));
   alert('Thanks — report saved for review');
   closeDetail();
 }
@@ -460,19 +542,22 @@ async function setLanguage(lang){
 
 // Single initialization on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async ()=>{
+  window.__favorites = readFavorites();
+  window.__showFavoritesOnly = localStorage.getItem('favoritesView') === '1';
+
   // Set up search input
   const q = document.getElementById('query');
   q.addEventListener('keydown', async (e)=>{ if(e.key==='Enter'){ await doSearch(true); e.preventDefault(); } });
-  
+
   // Load low-bandwidth preference
   if(localStorage.getItem('lowBandwidth')==='1') document.body.classList.add('low-bandwidth');
-  
+
   // Initialize language
   const saved = localStorage.getItem('lang') || 'auto';
   const select = document.getElementById('langSelect');
   if(select) select.value = saved;
   await setLanguage(saved);
-  
+
   // Load and display resources
   await loadResources();
   await doSearch(false);
