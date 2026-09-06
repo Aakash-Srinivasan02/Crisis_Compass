@@ -21,7 +21,8 @@ for (const south of [24, 30, 36, 42]) {
 OSM_BBOXES.push('18,-161,23,-154', '51,-180,72,-130');
 const DEFAULT_SAMHSA_CSV_PATHS = [
   path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_155248.csv'),
-  path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_160925.csv')
+  path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_160925.csv'),
+  path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_161810.csv')
 ];
 const SAMHSA_CSV_PATHS = (process.env.SAMHSA_CSV_PATHS || process.env.SAMHSA_CSV_PATH || DEFAULT_SAMHSA_CSV_PATHS.join(','))
   .split(',')
