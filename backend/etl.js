@@ -103,11 +103,44 @@ const PUBLIC_RESOURCE_CATALOG = [
     name: 'Veterans Crisis Line',
     type: 'veterans',
     services: ['veteran-support', 'crisis-counseling', 'suicide-prevention', 'family-support'],
-    address: 'Call 988, then press 1, or text 838255', city: 'National', state: 'US', zip: '00000',
-    phone: '988', website: 'https://www.veteranscrisisline.net', hours: '24/7',
-    intake: 'Call 988 and press 1, text 838255, or chat online', eligibility: 'Veterans, service members, and their loved ones', cost: 'Free',
+    address: 'Call 1-800-273-8255 and press 1, or text 838255', city: 'National', state: 'US', zip: '00000',
+    phone: '1-800-273-8255', website: 'https://www.veteranscrisisline.net', hours: '24/7',
+    intake: 'Call 1-800-273-8255 and press 1, text 838255, or use the online chat', eligibility: 'Veterans, service members, and their loved ones', cost: 'Free',
     capacityStatus: 'Available 24/7', clientTypes: ['veterans', 'families'], wheelchair: true,
     source: 'public-directory', sourceId: 'veterans-crisis-line', verified: true
+  },
+  {
+    id: 'crisis-text-line',
+    name: 'Crisis Text Line',
+    type: 'crisis',
+    services: ['crisis-counseling', 'text-support', 'emotional-support'],
+    address: "Text 'HOME' to 741741", city: 'National', state: 'US', zip: '00000',
+    phone: '741741', contactMode: 'sms', website: 'https://www.crisistextline.org', hours: '24/7',
+    intake: "Text HOME to 741741 to connect with a trained crisis counselor", eligibility: 'Anyone in crisis or supporting someone in crisis', cost: 'Free',
+    capacityStatus: 'Available 24/7', clientTypes: ['individuals', 'families', 'youth'], wheelchair: true,
+    source: 'public-directory', sourceId: 'crisis-text-line', verified: true
+  },
+  {
+    id: 'trevor-lifeline',
+    name: 'The Trevor Lifeline',
+    type: 'crisis',
+    services: ['lgbtq-support', 'youth-crisis-support', 'suicide-prevention', 'crisis-counseling'],
+    address: 'Call 1-866-488-7386', city: 'National', state: 'US', zip: '00000',
+    phone: '1-866-488-7386', website: 'https://www.thetrevorproject.org/get-help-now/', hours: '24/7',
+    intake: 'Call the Trevor Lifeline or use online chat/text support', eligibility: 'LGBTQ young people', cost: 'Free',
+    capacityStatus: 'Available 24/7', clientTypes: ['youth', 'individuals'], wheelchair: true,
+    source: 'public-directory', sourceId: 'trevor-lifeline', verified: true
+  },
+  {
+    id: 'trans-lifeline',
+    name: 'Trans Lifeline',
+    type: 'crisis',
+    services: ['trans-support', 'peer-support', 'crisis-counseling'],
+    address: 'Call 1-877-565-8860', city: 'National', state: 'US', zip: '00000',
+    phone: '1-877-565-8860', website: 'https://translifeline.org', hours: 'Check current hotline hours',
+    intake: 'Call the peer-support hotline', eligibility: 'Trans and gender-diverse people', cost: 'Free',
+    capacityStatus: 'Check current hours', clientTypes: ['individuals', 'youth'], wheelchair: true,
+    source: 'public-directory', sourceId: 'trans-lifeline', verified: true
   },
   {
     id: 'va-homeless-programs',
@@ -191,6 +224,7 @@ function normalizePublicResource(item) {
     capacityStatus: item.capacityStatus || 'Check availability', clientTypes: item.clientTypes || [],
     petFriendly: Boolean(item.petFriendly), walkIns: Boolean(item.walkIns), wheelchair: item.wheelchair !== false,
     source: item.source || 'public-directory', sourceId: item.sourceId || item.id,
+    contactMode: item.contactMode || 'phone',
     sourceUrl: item.sourceUrl || null,
     sourceUpdateDate: item.sourceUpdateDate || timestamp, lastFetched: timestamp, verified: Boolean(item.verified)
   };

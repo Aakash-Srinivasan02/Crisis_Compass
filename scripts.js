@@ -206,6 +206,8 @@ function renderResults(list, paginationInfo = null){
     const hoursBadge = it.hours ? `<span class="hours-badge ${getHoursClass(it.hours)}">${escapeHtml(it.hours)}</span>` : '';
     const sourceBadge = it.verified ? '<span class="source-badge source-verified">Official source</span>' : '<span class="source-badge">Directory listing</span>';
     const updatedDate = formatResourceDate(it.sourceUpdateDate || it.lastFetched);
+    const contactLabel = it.contactMode === 'sms' ? 'Text' : 'Phone';
+    const contactHref = it.contactMode === 'sms' ? `sms:${escapeHtml(it.phone)}` : `tel:${escapeHtml(it.phone)}`;
     
     // Favorites functionality
     const isFavorite = window.__favorites && window.__favorites.includes(it.id);
@@ -230,7 +232,7 @@ function renderResults(list, paginationInfo = null){
       </div>
       <div class="address">${escapeHtml(it.address || '')}</div>
       <div class="contact-info">
-        ${it.phone ? `<div class="phone"><strong>Phone:</strong> <a href="tel:${escapeHtml(it.phone)}" class="phone-link">${escapeHtml(it.phone)}</a></div>` : ''}
+        ${it.phone ? `<div class="phone"><strong>${contactLabel}:</strong> <a href="${contactHref}" class="phone-link">${escapeHtml(it.phone)}</a></div>` : ''}
         ${it.website ? `<div class="website"><a href="${escapeHtml(it.website)}" target="_blank" rel="noopener" class="website-link">Visit Website</a></div>` : ''}
       </div>
       <div class="service-details">
@@ -242,7 +244,7 @@ function renderResults(list, paginationInfo = null){
       </div>
       <div class="card-actions">
         <button onclick="openDetail('${escapeHtml(it.id)}')" class="small-btn">View Details</button>
-        ${it.phone ? `<button onclick="window.location.href='tel:${escapeHtml(it.phone)}'" class="small-btn cta">Call Now</button>` : ''}
+        ${it.phone ? `<button onclick="window.location.href='${contactHref}'" class="small-btn cta">${contactLabel} Now</button>` : ''}
         ${it.lat && it.lon ? `<button onclick="getDirections(${it.lat}, ${it.lon}, '${escapeHtml(it.name)}')" class="small-btn">Directions</button>` : ''}
       </div>
     `;

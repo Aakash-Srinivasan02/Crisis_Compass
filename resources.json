@@ -34,8 +34,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "211-national",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -71,8 +73,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "988-national",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -108,8 +112,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "careeronestop",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -143,8 +149,48 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "childcare-gov",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
+    "verified": true
+  },
+  {
+    "id": "crisis-text-line",
+    "name": "Crisis Text Line",
+    "type": "crisis",
+    "services": [
+      "crisis-counseling",
+      "text-support",
+      "emotional-support"
+    ],
+    "address": "Text 'HOME' to 741741",
+    "city": "National",
+    "state": "US",
+    "zip": "00000",
+    "lat": null,
+    "lon": null,
+    "phone": "741741",
+    "website": "https://www.crisistextline.org",
+    "hours": "24/7",
+    "intake": "Text HOME to 741741 to connect with a trained crisis counselor",
+    "eligibility": "Anyone in crisis or supporting someone in crisis",
+    "cost": "Free",
+    "capacityStatus": "Available 24/7",
+    "clientTypes": [
+      "individuals",
+      "families",
+      "youth"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "public-directory",
+    "sourceId": "crisis-text-line",
+    "contactMode": "sms",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -180,8 +226,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "hud-housing",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -218,8 +266,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "nami-support",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -255,8 +305,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "domestic-violence-hotline",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -291,8 +343,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "national-runaway-safeline",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -327,8 +381,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "disaster-distress-helpline",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -363,8 +419,85 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "samhsa-treatment",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
+    "verified": true
+  },
+  {
+    "id": "trevor-lifeline",
+    "name": "The Trevor Lifeline",
+    "type": "crisis",
+    "services": [
+      "lgbtq-support",
+      "youth-crisis-support",
+      "suicide-prevention",
+      "crisis-counseling"
+    ],
+    "address": "Call 1-866-488-7386",
+    "city": "National",
+    "state": "US",
+    "zip": "00000",
+    "lat": null,
+    "lon": null,
+    "phone": "1-866-488-7386",
+    "website": "https://www.thetrevorproject.org/get-help-now/",
+    "hours": "24/7",
+    "intake": "Call the Trevor Lifeline or use online chat/text support",
+    "eligibility": "LGBTQ young people",
+    "cost": "Free",
+    "capacityStatus": "Available 24/7",
+    "clientTypes": [
+      "youth",
+      "individuals"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "public-directory",
+    "sourceId": "trevor-lifeline",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.289Z",
+    "lastFetched": "2026-09-06T15:51:59.289Z",
+    "verified": true
+  },
+  {
+    "id": "trans-lifeline",
+    "name": "Trans Lifeline",
+    "type": "crisis",
+    "services": [
+      "trans-support",
+      "peer-support",
+      "crisis-counseling"
+    ],
+    "address": "Call 1-877-565-8860",
+    "city": "National",
+    "state": "US",
+    "zip": "00000",
+    "lat": null,
+    "lon": null,
+    "phone": "1-877-565-8860",
+    "website": "https://translifeline.org",
+    "hours": "Check current hotline hours",
+    "intake": "Call the peer-support hotline",
+    "eligibility": "Trans and gender-diverse people",
+    "cost": "Free",
+    "capacityStatus": "Check current hours",
+    "clientTypes": [
+      "individuals",
+      "youth"
+    ],
+    "petFriendly": false,
+    "walkIns": false,
+    "wheelchair": true,
+    "source": "public-directory",
+    "sourceId": "trans-lifeline",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -400,8 +533,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "usa-disability-services",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -437,8 +572,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "usda-hunger-hotline",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   },
   {
@@ -473,8 +610,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "va-homeless-programs",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.290Z",
+    "lastFetched": "2026-09-06T15:51:59.290Z",
     "verified": true
   },
   {
@@ -487,16 +626,16 @@
       "suicide-prevention",
       "family-support"
     ],
-    "address": "Call 988, then press 1, or text 838255",
+    "address": "Call 1-800-273-8255 and press 1, or text 838255",
     "city": "National",
     "state": "US",
     "zip": "00000",
     "lat": null,
     "lon": null,
-    "phone": "988",
+    "phone": "1-800-273-8255",
     "website": "https://www.veteranscrisisline.net",
     "hours": "24/7",
-    "intake": "Call 988 and press 1, text 838255, or chat online",
+    "intake": "Call 1-800-273-8255 and press 1, text 838255, or use the online chat",
     "eligibility": "Veterans, service members, and their loved ones",
     "cost": "Free",
     "capacityStatus": "Available 24/7",
@@ -509,8 +648,10 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "veterans-crisis-line",
-    "sourceUpdateDate": "2026-09-06T15:19:53.745Z",
-    "lastFetched": "2026-09-06T15:19:53.745Z",
+    "contactMode": "phone",
+    "sourceUrl": null,
+    "sourceUpdateDate": "2026-09-06T15:51:59.288Z",
+    "lastFetched": "2026-09-06T15:51:59.288Z",
     "verified": true
   }
 ]
