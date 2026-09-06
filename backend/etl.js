@@ -19,7 +19,14 @@ for (const south of [24, 30, 36, 42]) {
   }
 }
 OSM_BBOXES.push('18,-161,23,-154', '51,-180,72,-130');
-const SAMHSA_CSV_PATH = process.env.SAMHSA_CSV_PATH || path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_155248.csv');
+const DEFAULT_SAMHSA_CSV_PATHS = [
+  path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_155248.csv'),
+  path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_160925.csv')
+];
+const SAMHSA_CSV_PATHS = (process.env.SAMHSA_CSV_PATHS || process.env.SAMHSA_CSV_PATH || DEFAULT_SAMHSA_CSV_PATHS.join(','))
+  .split(',')
+  .map(value => value.trim())
+  .filter(Boolean);
 
 const PUBLIC_RESOURCE_CATALOG = [
   {
@@ -273,7 +280,7 @@ function normalizeCsvFacility(row, index) {
   if (csvFlag(row, 'vet')) clientTypes.push('veterans');
   if (!clientTypes.length) clientTypes.push('adults');
   return normalizePublicResource({
-    id: `samhsa-${index + 1}`,
+    id: `samhsa-${String(row.state || 'US').toLowerCase()}-${index + 1}`,
     name,
     type,
     services: [...new Set(services.length ? services : ['referrals'])],
@@ -293,7 +300,7 @@ function normalizeCsvFacility(row, index) {
     clientTypes,
     wheelchair: true,
     source: 'samhsa-csv',
-    sourceId: row.frid || `samhsa-${index + 1}`,
+    sourceId: row.frid || `samhsa-${String(row.state || 'US').toLowerCase()}-${index + 1}`,
     sourceUrl: 'https://findtreatment.gov',
     verified: true
   });
@@ -337,10 +344,12 @@ async function fetchPublicCatalog() {
 }
 
 async function fetchCsvFacilities() {
-  if (!fs.existsSync(SAMHSA_CSV_PATH)) return [];
-  console.log(`Importing SAMHSA facility CSV: ${SAMHSA_CSV_PATH}`);
-  const records = parseCsv(fs.readFileSync(SAMHSA_CSV_PATH, 'utf8'));
-  return records.map(normalizeCsvFacility).filter(Boolean);
+  return SAMHSA_CSV_PATHS.flatMap(csvPath => {
+    if (!fs.existsSync(csvPath)) return [];
+    console.log(`Importing SAMHSA facility CSV: ${csvPath}`);
+    const records = parseCsv(fs.readFileSync(csvPath, 'utf8'));
+    return records.map(normalizeCsvFacility).filter(Boolean);
+  });
 }
 
 async function fetchConfiguredFeed() {
