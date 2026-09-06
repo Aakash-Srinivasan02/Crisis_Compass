@@ -8,7 +8,7 @@
   <meta name="author" content="Crisis Compass">
   <meta name="robots" content="index, follow">
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
-  <title>Crisis Compass — Find Local Crisis Support Services</title>
+  <title>Crisis Compass — Find Crisis Support Resources</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,13 +43,13 @@
           <span class="logo-icon">🧭</span>
           <div>
             <h1>Crisis Compass</h1>
-            <p class="mission">Find trusted local help for housing, recovery, safety, and mental health support.</p>
+            <p class="mission">Find official directories and local help for housing, recovery, safety, food, and mental health support.</p>
           </div>
         </div>
         <div class="trust-indicators">
-          <span class="trust-badge">Verified local services</span>
+          <span class="trust-badge">Official resource directories</span>
           <span class="trust-badge">Confidential support</span>
-          <span class="trust-badge">Fast referral guidance</span>
+          <span class="trust-badge">Confirm availability first</span>
         </div>
       </div>
       <aside class="header-callout" aria-label="Immediate support callout">
@@ -140,7 +140,7 @@
           <option value="WI">Wisconsin</option>
           <option value="WY">Wyoming</option>
         </select>
-        <button id="findBtn" class="cta" onclick="doSearch(true)" data-i18n="find_cta">Find Local, Verified Help</button>
+        <button id="findBtn" class="cta" onclick="doSearch(true)" data-i18n="find_cta">Find Support Options</button>
         <button type="button" class="small-btn" onclick="geolocateAndSearch()">Use my location</button>
       </form>
 
@@ -166,16 +166,16 @@
 
     <section class="impact-grid" aria-label="Service overview">
       <article class="impact-card">
-        <span class="impact-number">1,000+</span>
-        <p>local resource referrals</p>
+        <span class="impact-number">National</span>
+        <p>official resource directories</p>
       </article>
       <article class="impact-card">
         <span class="impact-number">24/7</span>
         <p>emergency and crisis guidance</p>
       </article>
       <article class="impact-card">
-        <span class="impact-number">< 1 min</span>
-        <p>to find help in many cases</p>
+        <span class="impact-number">Call first</span>
+        <p>confirm hours and availability</p>
       </article>
     </section>
 
@@ -198,7 +198,7 @@
     </section>
 
     <section id="results" aria-live="polite" class="results">
-      <p class="hint">Enter a city or ZIP, or choose a service, then tap "Find Local, Verified Help".</p>
+      <p class="hint">Enter a city or ZIP, or choose a service. Directory listings may route you to a national search or hotline.</p>
     </section>
 
     <section class="info">
@@ -220,6 +220,7 @@
             <li>Mental Health Treatment</li>
             <li>Substance Use Treatment</li>
             <li>Legal Aid Services</li>
+            <li>Food & Crisis Support</li>
             <li>Family Support Services</li>
             <li>Accessibility Services</li>
           </ul>
@@ -245,7 +246,7 @@
       </div>
       <div class="emergency-notice">
         <h4>Emergency Services & 211</h4>
-        <p>If you or someone you know is in immediate danger, call 911 or your local emergency services. For non-emergency support, call 211 to connect with a local information and referral specialist for housing, food, mental health, and community resources. For mental health crises, call the 988 Suicide & Crisis Lifeline.</p>
+        <p>If you or someone you know is in immediate danger, call 911 or your local emergency services. For non-emergency support, call 211 to connect with a local information and referral specialist. For mental health crises, call the 988 Suicide & Crisis Lifeline. Always confirm hours, eligibility, and availability before traveling.</p>
       </div>
     </section>
   </main>
@@ -253,7 +254,7 @@
   <!-- Detail modal -->
   <div id="detailModal" class="modal" role="dialog" aria-hidden="true">
     <div class="modal-content">
-      <button class="modal-close" onclick="closeDetail()">Close</button>
+      <button class="modal-close" type="button" onclick="closeDetail()" aria-label="Close resource details">Close</button>
       <div id="detailBody"></div>
       <div id="reportArea"></div>
     </div>
@@ -263,7 +264,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>Crisis Compass</h4>
-        <p>Connecting people in crisis to verified local services for housing, recovery, and mental health support.</p>
+        <p>Connecting people in crisis to official directories and local support for housing, recovery, food, safety, and mental health.</p>
       </div>
       <div class="footer-section">
         <h4>Emergency Contacts</h4>
@@ -284,7 +285,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 Crisis Compass. All rights reserved. | Built with care for those in need.</p>
+      <p>&copy; 2026 Crisis Compass. Resource availability should be confirmed with each provider.</p>
     </div>
   </footer>
 

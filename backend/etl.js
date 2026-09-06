@@ -12,33 +12,6 @@ const path = require('path');
 
 const now = () => new Date().toISOString();
 
-const LOCAL_RESOURCE_FALLBACKS = [
-  {
-    id: 'local-springfield-recovery', name: 'Downtown Recovery Center', type: 'substance',
-    services: ['detox', 'counseling', 'case-management'], address: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701',
-    lat: 39.7817, lon: -89.6501, phone: '217-555-0100', website: 'https://findtreatment.gov',
-    hours: 'Call for hours', intake: 'Call ahead', eligibility: 'Varies by program', cost: 'Sliding scale',
-    capacityStatus: 'Call first', clientTypes: ['adults', 'teens'], wheelchair: true,
-    source: 'local-fallback', sourceId: 'local-springfield-recovery', verified: false
-  },
-  {
-    id: 'local-springfield-shelter', name: 'Hope Emergency Shelter', type: 'shelter',
-    services: ['shelter', 'meals', 'case-management'], address: '789 Elm St', city: 'Springfield', state: 'IL', zip: '62703',
-    lat: 39.789, lon: -89.64, phone: '217-555-0300', website: 'https://www.hud.gov',
-    hours: 'Call for hours', intake: 'Walk-ins welcome', eligibility: 'Varies by program', cost: 'Free',
-    capacityStatus: 'Call first', clientTypes: ['families', 'individuals'], walkIns: true, wheelchair: true,
-    source: 'local-fallback', sourceId: 'local-springfield-shelter', verified: false
-  },
-  {
-    id: 'local-los-angeles-recovery', name: 'California Recovery Services', type: 'substance',
-    services: ['detox', 'counseling', 'rehab'], address: '789 Sunset Blvd', city: 'Los Angeles', state: 'CA', zip: '90210',
-    lat: 34.0522, lon: -118.2437, phone: '213-555-0100', website: 'https://findtreatment.gov',
-    hours: 'Call for hours', intake: 'Call ahead', eligibility: 'Varies by program', cost: 'Sliding scale',
-    capacityStatus: 'Call first', clientTypes: ['adults', 'teens'], wheelchair: true,
-    source: 'local-fallback', sourceId: 'local-los-angeles-recovery', verified: false
-  }
-];
-
 const PUBLIC_RESOURCE_CATALOG = [
   {
     id: '211-national',
@@ -149,7 +122,7 @@ function deduplicate(resources) {
 
 async function fetchPublicCatalog() {
   console.log('Fetching official public resource directories...');
-  return [...LOCAL_RESOURCE_FALLBACKS, ...PUBLIC_RESOURCE_CATALOG].map(normalizePublicResource);
+  return PUBLIC_RESOURCE_CATALOG.map(normalizePublicResource);
 }
 
 async function consolidate() {
@@ -170,4 +143,4 @@ async function consolidate() {
 
 if (require.main === module) consolidate().catch(error => { console.error('ETL failed:', error.message); process.exit(1); });
 
-module.exports = { PUBLIC_RESOURCE_CATALOG, LOCAL_RESOURCE_FALLBACKS, normalizePublicResource, deduplicate, fetchPublicCatalog, consolidate };
+module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, deduplicate, fetchPublicCatalog, consolidate };

@@ -50,6 +50,7 @@ main{max-width:1180px;margin:0 auto;padding:0 20px 48px}
 .utility-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .small-btn{background:#fff;border:1px solid var(--border);padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--accent);transition:all 0.2s;font-size:0.87rem;box-shadow:var(--shadow-soft)}
 .small-btn:hover{background:#f8fbff;border-color:#bed7f3}
+.small-btn:focus-visible,.cta:focus-visible,.quick-exit:focus-visible,.modal-close:focus-visible,.favorite-btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f2a65a;outline-offset:2px}
 #langSelect{padding:10px 14px;border-radius:999px;border:1px solid var(--border);font-size:0.87rem;background:#fff;color:var(--text);cursor:pointer;transition:all 0.2s}
 #langSelect:hover{border-color:#bed7f3}
 .privacy-link{color:var(--accent);text-decoration:none;margin-left:4px;font-weight:600;transition:color 0.2s;font-size:0.87rem}
@@ -104,6 +105,11 @@ select:focus{outline:none;border-color:#9cbde5;box-shadow:0 0 0 3px rgba(29,79,1
 .card a{color:var(--accent);text-decoration:none;font-weight:600;transition:color 0.2s;font-size:0.98rem}
 .card a:hover{color:var(--accent-2);text-decoration:underline}
 .meta{color:var(--text-secondary);font-size:0.95rem;margin-bottom:12px;font-weight:500;line-height:1.5}
+.source-badge,.freshness-info{display:inline-block;font-size:0.75rem;font-weight:700;color:#5a6677}
+.source-badge{padding:3px 8px;border-radius:999px;background:#f1f4f8;border:1px solid #d9e1ea}
+.source-verified{color:#206a47;background:#edf8f1;border-color:#cfead8}
+.freshness-info{margin-top:8px;color:#68778a;font-weight:600}
+.coverage-note{margin:12px 0 18px;padding:12px 14px;border-left:4px solid var(--warm);background:var(--warm-soft);color:#70431e;border-radius:8px;font-weight:600}
 .verified{display:inline-block;background:#eaf3ff;color:#1856b0;padding:6px 12px;border-radius:999px;font-weight:700;margin-left:8px;font-size:0.8rem;border:1px solid #cce0ff}
 .info{max-width:1180px;margin:0 auto;padding:24px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);margin-top:28px}
 .info h3{color:var(--accent);margin:0 0 16px;font-size:1.3rem;font-weight:700;text-align:left}

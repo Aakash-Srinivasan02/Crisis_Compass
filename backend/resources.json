@@ -1,110 +1,5 @@
 [
   {
-    "id": "local-los-angeles-recovery",
-    "name": "California Recovery Services",
-    "type": "substance",
-    "services": [
-      "detox",
-      "counseling",
-      "rehab"
-    ],
-    "address": "789 Sunset Blvd",
-    "city": "Los Angeles",
-    "state": "CA",
-    "zip": "90210",
-    "lat": 34.0522,
-    "lon": -118.2437,
-    "phone": "213-555-0100",
-    "website": "https://findtreatment.gov",
-    "hours": "Call for hours",
-    "intake": "Call ahead",
-    "eligibility": "Varies by program",
-    "cost": "Sliding scale",
-    "capacityStatus": "Call first",
-    "clientTypes": [
-      "adults",
-      "teens"
-    ],
-    "petFriendly": false,
-    "walkIns": false,
-    "wheelchair": true,
-    "source": "local-fallback",
-    "sourceId": "local-los-angeles-recovery",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
-    "verified": false
-  },
-  {
-    "id": "local-springfield-recovery",
-    "name": "Downtown Recovery Center",
-    "type": "substance",
-    "services": [
-      "detox",
-      "counseling",
-      "case-management"
-    ],
-    "address": "123 Main St",
-    "city": "Springfield",
-    "state": "IL",
-    "zip": "62701",
-    "lat": 39.7817,
-    "lon": -89.6501,
-    "phone": "217-555-0100",
-    "website": "https://findtreatment.gov",
-    "hours": "Call for hours",
-    "intake": "Call ahead",
-    "eligibility": "Varies by program",
-    "cost": "Sliding scale",
-    "capacityStatus": "Call first",
-    "clientTypes": [
-      "adults",
-      "teens"
-    ],
-    "petFriendly": false,
-    "walkIns": false,
-    "wheelchair": true,
-    "source": "local-fallback",
-    "sourceId": "local-springfield-recovery",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
-    "verified": false
-  },
-  {
-    "id": "local-springfield-shelter",
-    "name": "Hope Emergency Shelter",
-    "type": "shelter",
-    "services": [
-      "shelter",
-      "meals",
-      "case-management"
-    ],
-    "address": "789 Elm St",
-    "city": "Springfield",
-    "state": "IL",
-    "zip": "62703",
-    "lat": 39.789,
-    "lon": -89.64,
-    "phone": "217-555-0300",
-    "website": "https://www.hud.gov",
-    "hours": "Call for hours",
-    "intake": "Walk-ins welcome",
-    "eligibility": "Varies by program",
-    "cost": "Free",
-    "capacityStatus": "Call first",
-    "clientTypes": [
-      "families",
-      "individuals"
-    ],
-    "petFriendly": false,
-    "walkIns": true,
-    "wheelchair": true,
-    "source": "local-fallback",
-    "sourceId": "local-springfield-shelter",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
-    "verified": false
-  },
-  {
     "id": "211-national",
     "name": "211 United Way Community Resource Finder",
     "type": "general-support",
@@ -139,8 +34,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "211-national",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -176,8 +71,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "988-national",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -213,8 +108,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "hud-housing",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -251,8 +146,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "nami-support",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -288,8 +183,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "domestic-violence-hotline",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -324,8 +219,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "samhsa-treatment",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   },
   {
@@ -361,8 +256,8 @@
     "wheelchair": true,
     "source": "public-directory",
     "sourceId": "usda-hunger-hotline",
-    "sourceUpdateDate": "2026-09-06T15:11:22.891Z",
-    "lastFetched": "2026-09-06T15:11:22.891Z",
+    "sourceUpdateDate": "2026-09-06T15:16:21.916Z",
+    "lastFetched": "2026-09-06T15:16:21.916Z",
     "verified": true
   }
 ]

@@ -102,6 +102,13 @@ function getHoursClass(hours){
   return 'hours-regular';
 }
 
+function formatResourceDate(value){
+  if(!value) return '';
+  const date = new Date(value);
+  if(Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+}
+
 function getDirections(lat, lon, name){
   if(!lat || !lon) return;
   const destination = encodeURIComponent(String(name || 'Service provider'));
@@ -135,6 +142,13 @@ function renderResults(list, paginationInfo = null){
     </div>
   `;
   container.appendChild(summary);
+
+  if(window.__searchNotice){
+    const notice = document.createElement('p');
+    notice.className = 'coverage-note';
+    notice.textContent = window.__searchNotice;
+    container.appendChild(notice);
+  }
   
   if(list.length===0){
     const noResults = document.createElement('div');
@@ -142,7 +156,7 @@ function renderResults(list, paginationInfo = null){
     noResults.innerHTML = `
       <div class="no-results-content">
         <div class="no-results-icon">🔍</div>
-        <h4>No services found</h4>
+        <h4>No support options found</h4>
         <p>Try adjusting your search criteria:</p>
         <ul>
           <li>Use a different city or ZIP code</li>
@@ -190,6 +204,8 @@ function renderResults(list, paginationInfo = null){
     
     // Operating hours indicator
     const hoursBadge = it.hours ? `<span class="hours-badge ${getHoursClass(it.hours)}">${escapeHtml(it.hours)}</span>` : '';
+    const sourceBadge = it.verified ? '<span class="source-badge source-verified">Official source</span>' : '<span class="source-badge">Directory listing</span>';
+    const updatedDate = formatResourceDate(it.sourceUpdateDate || it.lastFetched);
     
     // Favorites functionality
     const isFavorite = window.__favorites && window.__favorites.includes(it.id);
@@ -208,6 +224,7 @@ function renderResults(list, paginationInfo = null){
       <div class="meta">
         <span class="service-type">${escapeHtml(it.type)}</span>
         <span class="location">${escapeHtml(it.city)}${it.zip ? ', ' + escapeHtml(it.zip) : ''}</span>
+        ${sourceBadge}
         ${distance}
         ${capacityClass ? `<span class="capacity ${capacityClass}">${escapeHtml(it.capacityStatus)}</span>` : ''}
       </div>
@@ -219,6 +236,7 @@ function renderResults(list, paginationInfo = null){
       <div class="service-details">
         ${costBadge}
         ${hoursBadge}
+        ${updatedDate ? `<div class="freshness-info">Last checked: ${escapeHtml(updatedDate)}</div>` : ''}
         ${it.intake ? `<div class="intake-info"><strong>Intake:</strong> ${escapeHtml(it.intake)}</div>` : ''}
         ${it.eligibility ? `<div class="eligibility-info"><strong>Eligibility:</strong> ${escapeHtml(it.eligibility)}</div>` : ''}
       </div>
@@ -252,6 +270,7 @@ async function doSearch(userTriggered){
   const filter = document.getElementById('filter').value;
   const stateFilter = document.getElementById('stateFilter').value;
   const all = await loadResources();
+  window.__searchNotice = '';
   let results = all.filter(r=>matchText(r,q));
   if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
   if(stateFilter) results = results.filter(r=>r.state===stateFilter);
@@ -265,10 +284,12 @@ async function doSearch(userTriggered){
       return zipDigits.startsWith(zipPrefix) || zipDigits.includes(q.replace(/\D/g, ''));
     });
     results = prefixMatches.filter(r => passesRefinements(r));
+    if(results.length) window.__searchNotice = 'No exact local listing matched that ZIP. Showing broader directory options; confirm local availability before traveling.';
   }
 
   if(zipLike && !results.length){
     results = all.filter(r => passesRefinements(r)).slice(0, 12);
+    window.__searchNotice = 'No exact listing matched that ZIP. Showing national directories and hotlines that can connect you to local help.';
   }
 
   // if a geolocation search was performed, userLat/Lon may be set
@@ -404,8 +425,10 @@ async function setupMap(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
   
   const all = await loadResources();
+  let markerCount = 0;
   all.forEach(it=>{
     if(it.lat && it.lon){
+      markerCount += 1;
       // Add distance to popup if user has location
       let popupText = '<strong>'+escapeHtml(it.name)+'</strong><br/>'+escapeHtml(it.city);
       if(window.__userLocation){
@@ -418,6 +441,9 @@ async function setupMap(){
       marker.bindPopup(popupText);
     }
   });
+  if(!markerCount){
+    container.insertAdjacentHTML('beforeend', '<p class="coverage-note">This directory currently provides national referral links rather than mappable local provider addresses.</p>');
+  }
   
   // Add user location marker if available
   if(window.__userLocation){

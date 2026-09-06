@@ -166,6 +166,7 @@ test('ETL: includes official online crisis-resource directories', () => {
   );
 
   assertTruthy(hasOfficialSource, 'Catalog includes official public resource domains and hotlines');
+  assertFalsy(catalog.some(item => String(item.phone || '').includes('555')), 'Catalog has no placeholder phone numbers');
 });
 
 // Test: API endpoint responses (mock)
@@ -492,14 +493,18 @@ test('geolocateAndSearch: filters resources within 50 miles', () => {
   }
 
   const userLat = 39.78, userLon = -89.65;
-  const withinRange = resources.map(r => {
+  const mappableResources = [
+    { id: 'nearby', lat: 39.7817, lon: -89.6501 },
+    { id: 'distant', lat: 34.0522, lon: -118.2437 }
+  ];
+  const withinRange = mappableResources.map(r => {
     const d = calculateDistance(userLat, userLon, r.lat, r.lon);
     return {r, d};
   })
     .filter(x => x.d === null || x.d <= 50);
-  // Test that filtering works: some resources are within 50 miles (IL ones), some are not
   assertTruthy(withinRange.length > 0, 'Some resources within 50 miles');
-  assertTruthy(withinRange.length < resources.length, 'Not all resources within 50 miles');
+  assertTruthy(withinRange.length < mappableResources.length, 'Not all resources within 50 miles');
+  assertTruthy(resources.every(resource => resource.lat === null && resource.lon === null), 'Directory records disclose missing map coordinates');
 });
 
 test('geolocateAndSearch: sorts results by distance (closest first)', () => {
@@ -540,9 +545,6 @@ test('geolocateAndSearch: sorts results by distance (closest first)', () => {
 });
 
 test('renderResults: displays distance in results', () => {
-  const filePath = path.join(__dirname, 'resources.json');
-  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
   function distanceMiles(lat1, lon1, lat2, lon2){
     if(!lat2 || !lon2) return null;
     const R = 3958.8;
@@ -555,17 +557,12 @@ test('renderResults: displays distance in results', () => {
   }
 
   global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
-  // Find an IL resource close to Springfield
-  const ilResource = resources.find(r => r.state === 'IL');
-  assertTruthy(ilResource, 'IL resource found');
-  const distance = distanceMiles(39.78, -89.65, ilResource.lat, ilResource.lon);
+  const localFixture = { lat: 39.7817, lon: -89.6501 };
+  const distance = distanceMiles(39.78, -89.65, localFixture.lat, localFixture.lon);
   assertTruthy(distance >= 0 && distance < 10, 'Distance calculated correctly (< 10 miles)');
 });
 
 test('Map popups: include distance when available', () => {
-  const filePath = path.join(__dirname, 'resources.json');
-  const resources = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  
   function distanceMiles(lat1, lon1, lat2, lon2){
     if(!lat2 || !lon2) return null;
     const R = 3958.8;
@@ -578,7 +575,7 @@ test('Map popups: include distance when available', () => {
   }
   
   global.window = { __userLocation: { lat: 39.78, lon: -89.65 } };
-  const resource = resources[0];
+  const resource = { lat: 39.7817, lon: -89.6501 };
   const dist = distanceMiles(39.78, -89.65, resource.lat, resource.lon);
   const popupText = dist.toFixed(1) + ' miles away';
   assertTruthy(popupText.includes('miles away'), 'Popup text includes distance');
