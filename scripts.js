@@ -2,11 +2,12 @@
 /* global L */
 let resourcesCache = null;
 let mapLoaded = false;
+const resourceDataUrl = `resources.json?refresh=${Date.now()}`;
 
 async function loadResources(){
   if(resourcesCache) return resourcesCache;
   try{
-    const res = await fetch('resources.json');
+    const res = await fetch(resourceDataUrl, { cache: 'no-store' });
     resourcesCache = await res.json();
     return resourcesCache;
   }catch(e){
