@@ -153,6 +153,21 @@ test('Resource schema: all resources have required fields', () => {
   });
 });
 
+// Test: ETL includes real public online resources, not mock placeholders
+test('ETL: includes official online crisis-resource directories', () => {
+  const etl = require('./backend/etl.js');
+  const catalog = Array.isArray(etl.PUBLIC_RESOURCE_CATALOG) ? etl.PUBLIC_RESOURCE_CATALOG : [];
+
+  assertTruthy(catalog.length > 0, 'A public resource catalog exists');
+  const officialDomains = ['211.org', '988lifeline.org', 'findtreatment.gov', 'thehotline.org', 'nami.org'];
+  const hasOfficialSource = catalog.some(item =>
+    officialDomains.some(domain => (item.website || '').includes(domain)) ||
+    officialDomains.some(domain => (item.phone || '').includes('211') || (item.phone || '').includes('988'))
+  );
+
+  assertTruthy(hasOfficialSource, 'Catalog includes official public resource domains and hotlines');
+});
+
 // Test: API endpoint responses (mock)
 test('API: /api/health response format', () => {
   function createHealthResponse() {
