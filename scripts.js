@@ -117,24 +117,52 @@ function getDirections(lat, lon, name){
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
+function changeResultsPage(page){
+  window.__resultPage = page;
+  renderResults(window.__lastResults || []);
+  document.getElementById('results')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderPaginationControls(container, currentPage, totalPages){
+  const pagination = document.createElement('nav');
+  pagination.className = 'pagination-controls';
+  pagination.setAttribute('aria-label', 'Search result pages');
+  const buttons = [];
+  for(let page = 1; page <= totalPages; page += 1){
+    if(totalPages > 7 && page > 2 && page < totalPages - 1 && Math.abs(page - currentPage) > 1){
+      if(buttons[buttons.length - 1] !== '...') buttons.push('...');
+      continue;
+    }
+    buttons.push(page);
+  }
+  pagination.innerHTML = buttons.map(page => page === '...'
+    ? '<span class="pagination-gap">...</span>'
+    : `<button type="button" class="small-btn ${page === currentPage ? 'active' : ''}" onclick="changeResultsPage(${page})" aria-label="Go to page ${page}" ${page === currentPage ? 'aria-current="page"' : ''}>${page}</button>`
+  ).join('');
+  container.appendChild(pagination);
+}
+
 function renderResults(list, paginationInfo = null){
   const container = document.getElementById('results');
   if(!container) return;
   console.log('renderResults called with', list.length, 'items');
+  window.__lastResults = list;
+  const pageSize = 25;
+  const totalResults = paginationInfo?.total || list.length;
+  const totalPages = paginationInfo?.totalPages || Math.max(1, Math.ceil(totalResults / pageSize));
+  const currentPage = Math.min(Math.max(1, paginationInfo?.currentPage || window.__resultPage || 1), totalPages);
+  window.__resultPage = currentPage;
+  const pageItems = list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   
   container.innerHTML = '';
   
   // Add search results summary
-  const totalResults = paginationInfo?.total || list.length;
-  const currentPage = paginationInfo?.currentPage || 1;
-  const totalPages = paginationInfo?.totalPages || 1;
-  
   const summary = document.createElement('div');
   summary.className = 'results-summary';
   summary.innerHTML = `
     <div class="summary-content">
       <h3 class="results-count">${totalResults} ${totalResults === 1 ? 'service' : 'services'} found</h3>
-      ${paginationInfo ? `<div class="pagination-info">Page ${currentPage} of ${totalPages}</div>` : ''}
+      ${totalPages > 1 ? `<div class="pagination-info">Page ${currentPage} of ${totalPages} · Showing ${pageItems.length}</div>` : ''}
       <div class="view-controls">
         <button onclick="toggleFavoriteView()" class="small-btn ${window.__showFavoritesOnly ? 'active' : ''}" id="favoritesBtn">
           ${window.__showFavoritesOnly ? 'Showing Favorites' : 'Show Favorites'}
@@ -181,7 +209,7 @@ function renderResults(list, paginationInfo = null){
   }
   
   // Render each service card with enhanced information
-  list.forEach((it, index) => {
+  pageItems.forEach((it, index) => {
     const el = document.createElement('div');
     el.className = 'card';
     
@@ -262,10 +290,7 @@ function renderResults(list, paginationInfo = null){
     }, index * 50);
   });
   
-  // Add pagination if needed
-  if(paginationInfo && totalPages > 1) {
-    renderPagination(container, paginationInfo);
-  }
+  if(totalPages > 1) renderPaginationControls(container, currentPage, totalPages);
 }
 
 async function doSearch(userTriggered){
@@ -273,6 +298,7 @@ async function doSearch(userTriggered){
   const filter = document.getElementById('filter').value;
   const stateFilter = document.getElementById('stateFilter').value;
   const all = await loadResources();
+  window.__resultPage = 1;
   window.__searchNotice = '';
   let results = all.filter(r=>matchText(r,q));
   if(filter) results = results.filter(r=>r.type===filter || (r.services||[]).includes(filter));
