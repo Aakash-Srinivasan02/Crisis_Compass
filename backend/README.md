@@ -25,6 +25,12 @@ Provider-feed records must use the canonical resource fields and are normalized 
 they are merged. The pipeline does not invent local addresses, phone numbers, or map
 coordinates when a feed omits them.
 
+For community-mapped locations, run the optional OpenStreetMap importer with
+`OSM_IMPORT=true`. It uses Overpass endpoints, keeps named records with a phone or
+website, marks them as not independently verified, and preserves the OSM attribution
+URL. Public Overpass services may rate-limit bulk runs; configure `OSM_ENDPOINTS` with
+approved endpoints or use a permitted bulk extract for a reliable 1,000-plus import.
+
 ### Start API Server
 ```bash
 npm start

@@ -11,6 +11,14 @@ const fs = require('fs');
 const path = require('path');
 
 const now = () => new Date().toISOString();
+const OSM_ENDPOINTS = (process.env.OSM_ENDPOINTS || process.env.OSM_ENDPOINT || 'https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter').split(',').map(value => value.trim()).filter(Boolean);
+const OSM_BBOXES = [];
+for (const south of [24, 30, 36, 42]) {
+  for (const west of [-125, -118, -110, -102, -94, -86, -78]) {
+    OSM_BBOXES.push(`${south},${west},${south + 6},${west + 7}`);
+  }
+}
+OSM_BBOXES.push('18,-161,23,-154', '51,-180,72,-130');
 
 const PUBLIC_RESOURCE_CATALOG = [
   {
@@ -183,6 +191,7 @@ function normalizePublicResource(item) {
     capacityStatus: item.capacityStatus || 'Check availability', clientTypes: item.clientTypes || [],
     petFriendly: Boolean(item.petFriendly), walkIns: Boolean(item.walkIns), wheelchair: item.wheelchair !== false,
     source: item.source || 'public-directory', sourceId: item.sourceId || item.id,
+    sourceUrl: item.sourceUrl || null,
     sourceUpdateDate: item.sourceUpdateDate || timestamp, lastFetched: timestamp, verified: Boolean(item.verified)
   };
 }
@@ -213,10 +222,72 @@ async function fetchConfiguredFeed() {
   return records.map(normalizePublicResource);
 }
 
+function normalizeOsmResource(element) {
+  const tags = element.tags || {};
+  const name = tags.name || tags['official_name'];
+  const lat = element.lat ?? element.center?.lat ?? null;
+  const lon = element.lon ?? element.center?.lon ?? null;
+  const hasAddress = tags['addr:street'] && (tags['addr:housenumber'] || tags['addr:place']);
+  const hasContact = tags.phone || tags['contact:phone'] || tags.website || tags['contact:website'] || hasAddress;
+  if (!name || !lat || !lon || !hasContact) return null;
+  if (tags.amenity === 'shelter' && /picnic|gazebo/i.test(tags.shelter_type || '')) return null;
+
+  const amenity = tags.amenity;
+  const type = amenity === 'shelter' ? 'shelter' : amenity === 'food_bank' ? 'food' : 'general-support';
+  const address = [tags['addr:housenumber'], tags['addr:street']].filter(Boolean).join(' ') || tags['addr:place'] || '';
+  const city = tags['addr:city'] || tags['addr:town'] || tags['addr:village'] || '';
+  const state = tags['addr:state'] || '';
+  const zip = tags['addr:postcode'] || '';
+  const website = tags.website || tags['contact:website'] || null;
+  const phone = tags.phone || tags['contact:phone'] || null;
+  const sourceId = `osm-${element.type}-${element.id}`;
+  return normalizePublicResource({
+    id: sourceId,
+    name,
+    type,
+    services: type === 'shelter' ? ['shelter', 'housing-referrals'] : type === 'food' ? ['food-assistance', 'food-bank-referrals'] : ['community-support', 'referrals'],
+    address, city, state, zip, lat, lon, phone, website,
+    hours: tags.opening_hours || 'Contact provider for hours',
+    intake: 'Contact provider to confirm services and availability',
+    eligibility: 'Varies by provider', cost: 'Varies', capacityStatus: 'Call first',
+    clientTypes: ['individuals', 'families'], wheelchair: tags['wheelchair'] !== 'no',
+    source: 'openstreetmap', sourceId, sourceUrl: `https://www.openstreetmap.org/${element.type}/${element.id}`, verified: false
+  });
+}
+
+async function fetchOpenStreetMapResources() {
+  if (process.env.OSM_IMPORT !== 'true') return [];
+  const resources = [];
+  const queryFor = bbox => `[out:json][timeout:90];(nwr["name"]["phone"]["amenity"~"shelter|social_centre|food_bank|clinic|community_centre"](${bbox});nwr["name"]["website"]["amenity"~"shelter|social_centre|food_bank|clinic|community_centre"](${bbox}););out center tags;`;
+  for (const bbox of OSM_BBOXES) {
+    console.log(`Fetching mapped community resources for ${bbox}...`);
+    let imported = false;
+    for (const endpoint of OSM_ENDPOINTS) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'CrisisCompass/1.0 (resource directory)' },
+          body: new URLSearchParams({ data: queryFor(bbox) })
+        });
+        if (!response.ok) throw new Error(`${response.status}`);
+        const payload = await response.json();
+        resources.push(...(payload.elements || []).map(normalizeOsmResource).filter(Boolean));
+        imported = true;
+        break;
+      } catch (error) {
+        console.warn(`OpenStreetMap endpoint unavailable for ${bbox}: ${endpoint} (${error.message})`);
+      }
+    }
+    if (!imported) console.warn(`Skipping ${bbox}; official directory resources will still be generated.`);
+  }
+  return resources;
+}
+
 async function consolidate() {
   const resources = deduplicate([
     ...(await fetchPublicCatalog()),
-    ...(await fetchConfiguredFeed())
+    ...(await fetchConfiguredFeed()),
+    ...(await fetchOpenStreetMapResources())
   ]).sort((a, b) => {
     const aHasCoordinates = a.lat !== null && a.lon !== null;
     const bHasCoordinates = b.lat !== null && b.lon !== null;
@@ -234,4 +305,4 @@ async function consolidate() {
 
 if (require.main === module) consolidate().catch(error => { console.error('ETL failed:', error.message); process.exit(1); });
 
-module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, deduplicate, fetchPublicCatalog, fetchConfiguredFeed, consolidate };
+module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, normalizeOsmResource, deduplicate, fetchPublicCatalog, fetchConfiguredFeed, fetchOpenStreetMapResources, consolidate };
