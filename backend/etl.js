@@ -89,6 +89,83 @@ const PUBLIC_RESOURCE_CATALOG = [
     intake: 'Call the hotline or use the online food resources', eligibility: 'Varies by program', cost: 'Free',
     capacityStatus: 'Check local provider', clientTypes: ['families', 'individuals', 'youth'], wheelchair: true,
     source: 'public-directory', sourceId: 'usda-hunger-hotline', verified: true
+  },
+  {
+    id: 'veterans-crisis-line',
+    name: 'Veterans Crisis Line',
+    type: 'veterans',
+    services: ['veteran-support', 'crisis-counseling', 'suicide-prevention', 'family-support'],
+    address: 'Call 988, then press 1, or text 838255', city: 'National', state: 'US', zip: '00000',
+    phone: '988', website: 'https://www.veteranscrisisline.net', hours: '24/7',
+    intake: 'Call 988 and press 1, text 838255, or chat online', eligibility: 'Veterans, service members, and their loved ones', cost: 'Free',
+    capacityStatus: 'Available 24/7', clientTypes: ['veterans', 'families'], wheelchair: true,
+    source: 'public-directory', sourceId: 'veterans-crisis-line', verified: true
+  },
+  {
+    id: 'va-homeless-programs',
+    name: 'VA Homeless Programs',
+    type: 'housing',
+    services: ['veteran-housing', 'homeless-services', 'healthcare-referrals', 'employment-support'],
+    address: 'Find VA homeless program support', city: 'National', state: 'US', zip: '00000',
+    phone: '1-877-424-3838', website: 'https://www.va.gov/homeless', hours: 'Call for current hours',
+    intake: 'Call the National Call Center for Homeless Veterans', eligibility: 'Veterans and their families', cost: 'Free',
+    capacityStatus: 'Check local program', clientTypes: ['veterans', 'families'], wheelchair: true,
+    source: 'public-directory', sourceId: 'va-homeless-programs', verified: true
+  },
+  {
+    id: 'careeronestop',
+    name: 'CareerOneStop Employment and Training',
+    type: 'employment',
+    services: ['job-search', 'career-training', 'workforce-referrals', 'unemployment-help'],
+    address: 'Find a local American Job Center', city: 'National', state: 'US', zip: '00000',
+    phone: '1-877-872-5627', website: 'https://www.careeronestop.org', hours: 'Online directory',
+    intake: 'Search for a local American Job Center', eligibility: 'Varies by workforce program', cost: 'Free',
+    capacityStatus: 'Check local center', clientTypes: ['adults', 'youth', 'veterans'], wheelchair: true,
+    source: 'public-directory', sourceId: 'careeronestop', verified: true
+  },
+  {
+    id: 'childcare-gov',
+    name: 'ChildCare.gov Assistance Finder',
+    type: 'childcare',
+    services: ['childcare-assistance', 'childcare-referrals', 'family-support'],
+    address: 'Find child care assistance by state', city: 'National', state: 'US', zip: '00000',
+    phone: '211', website: 'https://childcare.gov', hours: 'Online directory',
+    intake: 'Choose your state to find local assistance', eligibility: 'Varies by state program', cost: 'Varies',
+    capacityStatus: 'Check local program', clientTypes: ['families', 'youth'], wheelchair: true,
+    source: 'public-directory', sourceId: 'childcare-gov', verified: true
+  },
+  {
+    id: 'usa-disability-services',
+    name: 'USA.gov Disability Services',
+    type: 'disability',
+    services: ['disability-benefits', 'accessible-services', 'healthcare-referrals', 'caregiver-support'],
+    address: 'Find disability benefits and services', city: 'National', state: 'US', zip: '00000',
+    phone: '1-800-333-4636', website: 'https://www.usa.gov/disability-services', hours: 'Online directory',
+    intake: 'Search federal and state disability services', eligibility: 'Varies by program', cost: 'Free',
+    capacityStatus: 'Check program requirements', clientTypes: ['individuals', 'families', 'veterans'], wheelchair: true,
+    source: 'public-directory', sourceId: 'usa-disability-services', verified: true
+  },
+  {
+    id: 'national-runaway-safeline',
+    name: 'National Runaway Safeline',
+    type: 'youth',
+    services: ['youth-crisis-support', 'family-mediation', 'shelter-referrals', 'transportation-support'],
+    address: 'Call, text, or chat online', city: 'National', state: 'US', zip: '00000',
+    phone: '1-800-786-2929', website: 'https://www.1800runaway.org', hours: '24/7',
+    intake: 'Call, text, or chat with a trained staff member', eligibility: 'Young people and concerned adults', cost: 'Free',
+    capacityStatus: 'Available 24/7', clientTypes: ['youth', 'families'], wheelchair: true,
+    source: 'public-directory', sourceId: 'national-runaway-safeline', verified: true
+  },
+  {
+    id: 'disaster-distress-helpline',
+    name: 'SAMHSA Disaster Distress Helpline',
+    type: 'crisis',
+    services: ['disaster-support', 'crisis-counseling', 'emotional-support'],
+    address: 'Call or text 1-800-985-5990', city: 'National', state: 'US', zip: '00000',
+    phone: '1-800-985-5990', website: 'https://www.samhsa.gov/find-help/disaster-distress-helpline', hours: '24/7',
+    intake: 'Call or text the helpline', eligibility: 'People affected by disasters and emergencies', cost: 'Free',
+    capacityStatus: 'Available 24/7', clientTypes: ['individuals', 'families', 'youth'], wheelchair: true,
+    source: 'public-directory', sourceId: 'disaster-distress-helpline', verified: true
   }
 ];
 
@@ -125,8 +202,22 @@ async function fetchPublicCatalog() {
   return PUBLIC_RESOURCE_CATALOG.map(normalizePublicResource);
 }
 
+async function fetchConfiguredFeed() {
+  if (!process.env.RESOURCE_FEED_URL) return [];
+  console.log(`Fetching configured provider feed: ${process.env.RESOURCE_FEED_URL}`);
+  const response = await fetch(process.env.RESOURCE_FEED_URL, { headers: { Accept: 'application/json' } });
+  if (!response.ok) throw new Error(`RESOURCE_FEED_URL returned ${response.status}`);
+  const payload = await response.json();
+  const records = Array.isArray(payload) ? payload : payload.resources;
+  if (!Array.isArray(records)) throw new Error('RESOURCE_FEED_URL must return an array or { resources: [] }');
+  return records.map(normalizePublicResource);
+}
+
 async function consolidate() {
-  const resources = deduplicate((await fetchPublicCatalog())).sort((a, b) => {
+  const resources = deduplicate([
+    ...(await fetchPublicCatalog()),
+    ...(await fetchConfiguredFeed())
+  ]).sort((a, b) => {
     const aHasCoordinates = a.lat !== null && a.lon !== null;
     const bHasCoordinates = b.lat !== null && b.lon !== null;
     if (aHasCoordinates !== bHasCoordinates) return aHasCoordinates ? -1 : 1;
@@ -143,4 +234,4 @@ async function consolidate() {
 
 if (require.main === module) consolidate().catch(error => { console.error('ETL failed:', error.message); process.exit(1); });
 
-module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, deduplicate, fetchPublicCatalog, consolidate };
+module.exports = { PUBLIC_RESOURCE_CATALOG, normalizePublicResource, deduplicate, fetchPublicCatalog, fetchConfiguredFeed, consolidate };

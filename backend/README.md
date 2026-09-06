@@ -14,6 +14,17 @@ npm install
 npm run etl
 ```
 
+The ETL always includes official national referral directories. To merge a verified
+provider feed that returns either an array or `{ "resources": [] }`, configure:
+
+```bash
+RESOURCE_FEED_URL=https://example.gov/verified-resources.json npm run etl
+```
+
+Provider-feed records must use the canonical resource fields and are normalized before
+they are merged. The pipeline does not invent local addresses, phone numbers, or map
+coordinates when a feed omits them.
+
 ### Start API Server
 ```bash
 npm start
