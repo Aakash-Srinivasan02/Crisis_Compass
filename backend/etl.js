@@ -19,7 +19,7 @@ for (const south of [24, 30, 36, 42]) {
   }
 }
 OSM_BBOXES.push('18,-161,23,-154', '51,-180,72,-130');
-const SAMHSA_CSV_PATH = process.env.SAMHSA_CSV_PATH || path.join(__dirname, '..', '.github', 'workflows', 'FindTreament_Facility_listing_2026_09_06_155248.csv');
+const SAMHSA_CSV_PATH = process.env.SAMHSA_CSV_PATH || path.join(__dirname, '..', 'FindTreament_Facility_listing_2026_09_06_155248.csv');
 
 const PUBLIC_RESOURCE_CATALOG = [
   {
